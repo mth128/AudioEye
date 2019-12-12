@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29209.62
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AudioEye", "AudioEye\AudioEye.csproj", "{37803052-2846-4CBD-A284-845B0CC63172}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{37803052-2846-4CBD-A284-845B0CC63172}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{37803052-2846-4CBD-A284-845B0CC63172}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{37803052-2846-4CBD-A284-845B0CC63172}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{37803052-2846-4CBD-A284-845B0CC63172}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D8101F56-D5E9-4502-AA28-E997B98E0200}
+	EndGlobalSection
+EndGlobal
