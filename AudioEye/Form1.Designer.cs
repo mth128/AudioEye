@@ -48,6 +48,12 @@
       this.label6 = new System.Windows.Forms.Label();
       this.ResolutionBox = new System.Windows.Forms.TextBox();
       this.label7 = new System.Windows.Forms.Label();
+      this.label8 = new System.Windows.Forms.Label();
+      this.TestXBox = new System.Windows.Forms.TextBox();
+      this.label9 = new System.Windows.Forms.Label();
+      this.TestYBox = new System.Windows.Forms.TextBox();
+      this.CoordXLabel = new System.Windows.Forms.Label();
+      this.CoordYLabel = new System.Windows.Forms.Label();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -158,6 +164,8 @@
       this.PictureBox1.TabIndex = 0;
       this.PictureBox1.TabStop = false;
       this.PictureBox1.MouseEnter += new System.EventHandler(this.PictureBox1_MouseEnter);
+      this.PictureBox1.MouseHover += new System.EventHandler(this.PictureBox1_MouseHover);
+      this.PictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseMove);
       // 
       // pictureBox2
       // 
@@ -188,6 +196,7 @@
       this.SubsectionsPerToneBox.Size = new System.Drawing.Size(100, 20);
       this.SubsectionsPerToneBox.TabIndex = 11;
       this.SubsectionsPerToneBox.Text = "4";
+      this.SubsectionsPerToneBox.TextChanged += new System.EventHandler(this.SubsectionsPerToneBox_TextChanged);
       // 
       // label4
       // 
@@ -205,6 +214,7 @@
       this.PowerBaseBox.Size = new System.Drawing.Size(100, 20);
       this.PowerBaseBox.TabIndex = 13;
       this.PowerBaseBox.Text = "1.8";
+      this.PowerBaseBox.TextChanged += new System.EventHandler(this.PowerBaseBox_TextChanged);
       // 
       // label5
       // 
@@ -222,6 +232,7 @@
       this.CenterSubstractBox.Size = new System.Drawing.Size(100, 20);
       this.CenterSubstractBox.TabIndex = 15;
       this.CenterSubstractBox.Text = "0.4";
+      this.CenterSubstractBox.TextChanged += new System.EventHandler(this.CenterSubstractBox_TextChanged);
       // 
       // label6
       // 
@@ -234,26 +245,87 @@
       // 
       // ResolutionBox
       // 
-      this.ResolutionBox.Location = new System.Drawing.Point(739, 21);
+      this.ResolutionBox.Location = new System.Drawing.Point(820, 21);
       this.ResolutionBox.Name = "ResolutionBox";
       this.ResolutionBox.Size = new System.Drawing.Size(100, 20);
       this.ResolutionBox.TabIndex = 16;
-      this.ResolutionBox.Text = "1024";
+      this.ResolutionBox.Text = "512";
+      this.ResolutionBox.TextChanged += new System.EventHandler(this.ResolutionBox_TextChanged);
       // 
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(664, 24);
+      this.label7.Location = new System.Drawing.Point(745, 24);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(57, 13);
       this.label7.TabIndex = 17;
       this.label7.Text = "Resolution";
+      // 
+      // label8
+      // 
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point(745, 46);
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size(35, 13);
+      this.label8.TabIndex = 19;
+      this.label8.Text = "TestX";
+      // 
+      // TestXBox
+      // 
+      this.TestXBox.Location = new System.Drawing.Point(820, 43);
+      this.TestXBox.Name = "TestXBox";
+      this.TestXBox.Size = new System.Drawing.Size(100, 20);
+      this.TestXBox.TabIndex = 18;
+      this.TestXBox.Text = "600";
+      this.TestXBox.TextChanged += new System.EventHandler(this.TestXBox_TextChanged);
+      // 
+      // label9
+      // 
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(745, 69);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(35, 13);
+      this.label9.TabIndex = 21;
+      this.label9.Text = "TestY";
+      // 
+      // TestYBox
+      // 
+      this.TestYBox.Location = new System.Drawing.Point(820, 66);
+      this.TestYBox.Name = "TestYBox";
+      this.TestYBox.Size = new System.Drawing.Size(100, 20);
+      this.TestYBox.TabIndex = 20;
+      this.TestYBox.Text = "700";
+      this.TestYBox.TextChanged += new System.EventHandler(this.TestYBox_TextChanged);
+      // 
+      // CoordXLabel
+      // 
+      this.CoordXLabel.AutoSize = true;
+      this.CoordXLabel.Location = new System.Drawing.Point(200, 54);
+      this.CoordXLabel.Name = "CoordXLabel";
+      this.CoordXLabel.Size = new System.Drawing.Size(13, 13);
+      this.CoordXLabel.TabIndex = 22;
+      this.CoordXLabel.Text = "0";
+      // 
+      // CoordYLabel
+      // 
+      this.CoordYLabel.AutoSize = true;
+      this.CoordYLabel.Location = new System.Drawing.Point(200, 73);
+      this.CoordYLabel.Name = "CoordYLabel";
+      this.CoordYLabel.Size = new System.Drawing.Size(13, 13);
+      this.CoordYLabel.TabIndex = 23;
+      this.CoordYLabel.Text = "0";
       // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(987, 515);
+      this.Controls.Add(this.CoordYLabel);
+      this.Controls.Add(this.CoordXLabel);
+      this.Controls.Add(this.label9);
+      this.Controls.Add(this.TestYBox);
+      this.Controls.Add(this.label8);
+      this.Controls.Add(this.TestXBox);
       this.Controls.Add(this.label7);
       this.Controls.Add(this.ResolutionBox);
       this.Controls.Add(this.CenterSubstractBox);
@@ -306,6 +378,12 @@
     private System.Windows.Forms.Label label6;
     private System.Windows.Forms.TextBox ResolutionBox;
     private System.Windows.Forms.Label label7;
+    private System.Windows.Forms.Label label8;
+    private System.Windows.Forms.TextBox TestXBox;
+    private System.Windows.Forms.Label label9;
+    private System.Windows.Forms.TextBox TestYBox;
+    private System.Windows.Forms.Label CoordXLabel;
+    private System.Windows.Forms.Label CoordYLabel;
   }
 }
 

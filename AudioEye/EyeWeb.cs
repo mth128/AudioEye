@@ -30,13 +30,34 @@ namespace AudioEye
           }
         }
       }
+    }
 
+    public PointF[] GetPoints(int rectangleIndex, float resolution, float centerX, float centerY)
+    {
+      return shapes[rectangleIndex].GetPoints(extent, resolution, centerX, centerY);
+    }
+
+    public void CopyDraw(Bitmap loadedImage, Bitmap webBitmap)
+    {
+      if (loadedImage == null)
+        return;
+      if (webBitmap == null)
+        return;
+      using (Graphics graphics = Graphics.FromImage(webBitmap))
+      {
+        foreach (EyeWebShape shape in shapes)
+        {
+          throw new NotImplementedException(); 
+        }
+      }
     }
   }
 
   public class EyeWebShape
   {
     public EyeWebCoordinate[] coordinates;
+    public PointF[] points1;
+    public PointF[] points2; 
 
     public EyeWebShape(double tone, double toneWidth = 1, float powerBase = 1.8f, float centerSubstract = 0.5f)
     {
@@ -52,7 +73,13 @@ namespace AudioEye
       return coordinates[0].ToString() + " \n" + coordinates[1].ToString() + " \n" +
         coordinates[2].ToString() + " \n" + coordinates[3].ToString();
     }
-
+    public PointF[] GetPoints(float extent, float resolution, float centerX, float centerY)
+    {
+      PointF[] points = new PointF[4];
+      for (int i = 0; i < 4; i++)
+        points[i] = coordinates[i].GetPoint(extent, resolution, centerX, centerY);
+      return points; 
+    }
   }
 
   public class EyeWebCoordinate
@@ -60,7 +87,7 @@ namespace AudioEye
     public float x;
     public float y; 
 
-    public EyeWebCoordinate(double tone, float powerBase =1.8f, float centerSubstract = 0.5f)
+    public EyeWebCoordinate(double tone, float powerBase =1.8f, float centerSubstract = 0.5f, bool clockwise = false)
     {
       double inverse = 72-tone;
       if (inverse <0)
@@ -73,12 +100,22 @@ namespace AudioEye
       double sigma = (tone) / 6.0 * Math.PI;
       double cos = Math.Cos(sigma);
       double sin = Math.Sin(sigma);
+      if (clockwise)
+        cos = -cos; 
       double length = Math.Pow(powerBase, inverse / 12.0) - centerSubstract;
 
       x = Convert.ToSingle(cos * length);
       y = Convert.ToSingle(sin * length); 
 
     }
+
+    public PointF GetPoint(float extent, float resolution, float centerX, float centerY)
+    {
+      float px = x / (2 * extent) * resolution + centerX;
+      float py = -y / (2 * extent) * resolution + centerY;
+      return new PointF(px,py);
+    }
+
 
     internal PointF PointF(float extent, float resolution)
     {
