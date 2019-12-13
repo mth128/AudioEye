@@ -13,7 +13,7 @@ namespace AudioEye
   public partial class Form1 : Form
   {
     private Bitmap loadedImage;
-    private int resolution = 1024;
+    private int resolution = 512;
     private float centerX = 500;
     private float centerY = 500;
 
@@ -25,7 +25,8 @@ namespace AudioEye
     private EyeWeb eyeWeb;
 
     private Bitmap webBitmap;
-    private Bitmap sourceImage; 
+
+    private byte[] imageIntensityBytes; 
 
     public Form1()
     {
@@ -66,33 +67,38 @@ namespace AudioEye
         eyeWeb = new EyeWeb(subsectionsPerTone, powerBase, centerSubstract);
       }
 
+
+
+      DrawWebOnSource(eyeWeb, resolution, centerX, centerY);
+      if (loadedImage!=null)
+        RecalculateWebIntensities(eyeWeb, imageIntensityBytes, loadedImage.Width, loadedImage.Height);
+      eyeWeb.CopyDraw(loadedImage, webBitmap);
+
       if (redrawEyeWeb)
-      { 
+      {
+
         Bitmap bitmap = new Bitmap(resolution, resolution);
         pictureBox2.Image = bitmap;
-        webBitmap = bitmap; 
-        int tint = 0; 
+        webBitmap = bitmap;
         using (Graphics graphics = Graphics.FromImage(bitmap))
         {
-          graphics.Clear(Color.White);
+          graphics.Clear(Color.DarkBlue);
 
           //Draw the connecting lines.
-          using (Pen pen = new Pen(Color.Black))
+          //using (Pen pen = new Pen(Color.Black))
           {
-            foreach (EyeWebShape rectangle in eyeWeb.shapes)
+            foreach (EyeWebShape shape in eyeWeb.shapes)
             {
               PointF[] points = new PointF[4];
-              for (int i =0; i<4;i++)
-                points[i] = rectangle.coordinates[i].PointF(eyeWeb.extent, resolution);
+              for (int i = 0; i < 4; i++)
+                points[i] = shape.coordinates[i].PointF(eyeWeb.extent, resolution);
 
-              rectangle.points1 = points; 
-
+              shape.targetPoints = points;
+              int tint = shape.tint;
               using (Brush brush = new SolidBrush(Color.FromArgb(tint, tint, tint)))
                 graphics.FillPolygon(brush, points);
               //graphics.DrawPolygon(pen, points);
-              tint++;
-              if (tint >= 256)
-                tint = 0; 
+
             }
           }
         }
@@ -100,8 +106,6 @@ namespace AudioEye
         float centerX = Convert.ToSingle(TestXBox.Text);
         float centerY = Convert.ToSingle(TestYBox.Text);
       }
-      DrawWeb(eyeWeb, resolution, centerX, centerY);
-      eyeWeb.CopyDraw(loadedImage, webBitmap); 
     }
 
     public void SetSubsectionsPerTone(int s)
@@ -139,11 +143,11 @@ namespace AudioEye
         if (ofd.ShowDialog() != DialogResult.OK)
           return;
 
-        PictureBox1.Image = loadedImage = ImageEdit.MakeGrayscale3(Image.FromFile(ofd.FileName));
+        PictureBox1.Image = loadedImage = ImageEdit.MakeGrayscale(Image.FromFile(ofd.FileName));
+
+        imageIntensityBytes = ImageEdit.GetIntensityBytesFrom(loadedImage);
       }
-
-
-
+           
     }
 
     private void Button2_Click(object sender, EventArgs e)
@@ -159,22 +163,40 @@ namespace AudioEye
 
     }
 
-    private void DrawWeb(EyeWeb eyeWeb, float resolution, float centerX, float centerY)
+    private void RecalculateWebIntensities(EyeWeb eyeWeb, byte[] imageBytes, int width, int height)
+    {
+      if (imageBytes == null)
+        return; 
+      for (int i =0; i<eyeWeb.shapes.Count;i++)
+      {
+        EyeWebShape shape = eyeWeb.shapes[i];
+        shape.tint = ImageEdit.GetValueOfArea(shape.sourcePoints, imageBytes, width, height);
+      }
+
+    }
+
+    private void DrawWebOnSource(EyeWeb eyeWeb, float resolution, float centerX, float centerY)
     {
       if (loadedImage == null)
         return;
 
       Bitmap bitmap = new Bitmap(loadedImage);
+
+
       PictureBox1.Image = bitmap; 
       using (Graphics graphics = Graphics.FromImage(bitmap))
-      {        
+      {
+        if (HideImageBox.Checked)
+        {
+          graphics.Clear(Color.White);
+        }
         //Draw the connecting lines.
-        using (Pen pen = new Pen(Color.Black))
+        using (Pen pen = new Pen(Color.Red))
         {
           for (int i =0; i<eyeWeb.shapes.Count;i++)
           {
             PointF[] points = eyeWeb.GetPoints(i, resolution, centerX, centerY);
-            eyeWeb.shapes[i].points2 = points; 
+            eyeWeb.shapes[i].sourcePoints = points; 
             graphics.DrawPolygon(pen, points);
           }
         }
@@ -281,7 +303,7 @@ namespace AudioEye
       blockRedraw = false;
       try
       {
-        Redraw(false);
+        Redraw(false,true);
       }
       catch
       {
@@ -327,6 +349,10 @@ namespace AudioEye
 
     }
 
+    private void PictureBox1_Click(object sender, EventArgs e)
+    {
+
+    }
   }
 
 

@@ -54,6 +54,7 @@
       this.TestYBox = new System.Windows.Forms.TextBox();
       this.CoordXLabel = new System.Windows.Forms.Label();
       this.CoordYLabel = new System.Windows.Forms.Label();
+      this.HideImageBox = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -163,6 +164,7 @@
       this.PictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.PictureBox1.TabIndex = 0;
       this.PictureBox1.TabStop = false;
+      this.PictureBox1.Click += new System.EventHandler(this.PictureBox1_Click);
       this.PictureBox1.MouseEnter += new System.EventHandler(this.PictureBox1_MouseEnter);
       this.PictureBox1.MouseHover += new System.EventHandler(this.PictureBox1_MouseHover);
       this.PictureBox1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseMove);
@@ -315,11 +317,22 @@
       this.CoordYLabel.TabIndex = 23;
       this.CoordYLabel.Text = "0";
       // 
+      // HideImageBox
+      // 
+      this.HideImageBox.AutoSize = true;
+      this.HideImageBox.Location = new System.Drawing.Point(242, 50);
+      this.HideImageBox.Name = "HideImageBox";
+      this.HideImageBox.Size = new System.Drawing.Size(79, 17);
+      this.HideImageBox.TabIndex = 24;
+      this.HideImageBox.Text = "Hide image";
+      this.HideImageBox.UseVisualStyleBackColor = true;
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(987, 515);
+      this.Controls.Add(this.HideImageBox);
       this.Controls.Add(this.CoordYLabel);
       this.Controls.Add(this.CoordXLabel);
       this.Controls.Add(this.label9);
@@ -384,6 +397,7 @@
     private System.Windows.Forms.TextBox TestYBox;
     private System.Windows.Forms.Label CoordXLabel;
     private System.Windows.Forms.Label CoordYLabel;
+    private System.Windows.Forms.CheckBox HideImageBox;
   }
 }
 

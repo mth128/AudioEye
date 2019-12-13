@@ -47,7 +47,7 @@ namespace AudioEye
       {
         foreach (EyeWebShape shape in shapes)
         {
-          throw new NotImplementedException(); 
+          
         }
       }
     }
@@ -56,8 +56,9 @@ namespace AudioEye
   public class EyeWebShape
   {
     public EyeWebCoordinate[] coordinates;
-    public PointF[] points1;
-    public PointF[] points2; 
+    public PointF[] targetPoints;
+    public PointF[] sourcePoints;
+    public int tint = 0;
 
     public EyeWebShape(double tone, double toneWidth = 1, float powerBase = 1.8f, float centerSubstract = 0.5f)
     {
