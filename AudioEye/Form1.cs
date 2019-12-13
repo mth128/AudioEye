@@ -18,8 +18,8 @@ namespace AudioEye
     private float centerY = 500;
 
     private int subsectionsPerTone = 4;
-    private float powerBase = 1.8f;
-    private float centerSubstract = 0.5f;
+    private float powerBase = 1.5f;
+    private float centerSubstract = 0.4f;
     private bool blockRedraw = false;
 
     private EyeWeb eyeWeb;
@@ -68,11 +68,10 @@ namespace AudioEye
       }
 
 
-
+   
       DrawWebOnSource(eyeWeb, resolution, centerX, centerY);
       if (loadedImage!=null)
         RecalculateWebIntensities(eyeWeb, imageIntensityBytes, loadedImage.Width, loadedImage.Height);
-      eyeWeb.CopyDraw(loadedImage, webBitmap);
 
       if (redrawEyeWeb)
       {
@@ -154,13 +153,9 @@ namespace AudioEye
     {
       subsectionsPerTone = Convert.ToInt32(SubsectionsPerToneBox.Text);
       powerBase = Convert.ToSingle(PowerBaseBox.Text);
-      centerSubstract = Convert.ToSingle(CenterSubstractBox.Text);
-
-           
+      centerSubstract = Convert.ToSingle(CenterSubstractBox.Text);           
       resolution = Convert.ToInt32(ResolutionBox.Text);
-
       Redraw(); 
-
     }
 
     private void RecalculateWebIntensities(EyeWeb eyeWeb, byte[] imageBytes, int width, int height)
@@ -180,9 +175,15 @@ namespace AudioEye
       if (loadedImage == null)
         return;
 
+      for (int i = 0; i < eyeWeb.shapes.Count; i++)
+      {
+        PointF[] points = eyeWeb.GetPoints(i, resolution, centerX, centerY);
+        eyeWeb.shapes[i].sourcePoints = points;
+      }
+      if (NoRedrawBox.Checked)
+        return; 
+
       Bitmap bitmap = new Bitmap(loadedImage);
-
-
       PictureBox1.Image = bitmap; 
       using (Graphics graphics = Graphics.FromImage(bitmap))
       {
@@ -193,12 +194,8 @@ namespace AudioEye
         //Draw the connecting lines.
         using (Pen pen = new Pen(Color.Red))
         {
-          for (int i =0; i<eyeWeb.shapes.Count;i++)
-          {
-            PointF[] points = eyeWeb.GetPoints(i, resolution, centerX, centerY);
-            eyeWeb.shapes[i].sourcePoints = points; 
-            graphics.DrawPolygon(pen, points);
-          }
+          for (int i = 0; i < eyeWeb.shapes.Count; i++)
+            graphics.DrawPolygon(pen, eyeWeb.shapes[i].sourcePoints);          
         }
       }
     }
@@ -352,6 +349,27 @@ namespace AudioEye
     private void PictureBox1_Click(object sender, EventArgs e)
     {
 
+    }
+
+    private void GenerateSoundButton_Click(object sender, EventArgs e)
+    {
+      if (eyeWeb == null)
+        return;
+      int steps = 65336;
+      double duration = 2;
+      double frame = duration / steps;
+
+      byte[] amplitudes = new byte[steps];
+      for (int i =0; i<steps;i++)
+      {
+        float amplitude = eyeWeb.GetAmplitude(i * frame);
+        if (amplitude >= 1)
+          amplitudes[i] = 255;
+        else if (amplitude < -1)
+          amplitudes[i] = 0;
+        else
+          amplitudes[i] = Convert.ToByte(amplitude * 128 + 127);
+      }
     }
   }
 

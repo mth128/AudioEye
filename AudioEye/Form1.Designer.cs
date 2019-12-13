@@ -55,6 +55,8 @@
       this.CoordXLabel = new System.Windows.Forms.Label();
       this.CoordYLabel = new System.Windows.Forms.Label();
       this.HideImageBox = new System.Windows.Forms.CheckBox();
+      this.NoRedrawBox = new System.Windows.Forms.CheckBox();
+      this.GenerateSoundButton = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -183,7 +185,7 @@
       // 
       // button2
       // 
-      this.button2.Location = new System.Drawing.Point(632, 66);
+      this.button2.Location = new System.Drawing.Point(655, 18);
       this.button2.Name = "button2";
       this.button2.Size = new System.Drawing.Size(75, 23);
       this.button2.TabIndex = 9;
@@ -197,7 +199,7 @@
       this.SubsectionsPerToneBox.Name = "SubsectionsPerToneBox";
       this.SubsectionsPerToneBox.Size = new System.Drawing.Size(100, 20);
       this.SubsectionsPerToneBox.TabIndex = 11;
-      this.SubsectionsPerToneBox.Text = "4";
+      this.SubsectionsPerToneBox.Text = "8";
       this.SubsectionsPerToneBox.TextChanged += new System.EventHandler(this.SubsectionsPerToneBox_TextChanged);
       // 
       // label4
@@ -215,7 +217,7 @@
       this.PowerBaseBox.Name = "PowerBaseBox";
       this.PowerBaseBox.Size = new System.Drawing.Size(100, 20);
       this.PowerBaseBox.TabIndex = 13;
-      this.PowerBaseBox.Text = "1.8";
+      this.PowerBaseBox.Text = "1.5";
       this.PowerBaseBox.TextChanged += new System.EventHandler(this.PowerBaseBox_TextChanged);
       // 
       // label5
@@ -327,11 +329,33 @@
       this.HideImageBox.Text = "Hide image";
       this.HideImageBox.UseVisualStyleBackColor = true;
       // 
+      // NoRedrawBox
+      // 
+      this.NoRedrawBox.AutoSize = true;
+      this.NoRedrawBox.Location = new System.Drawing.Point(242, 69);
+      this.NoRedrawBox.Name = "NoRedrawBox";
+      this.NoRedrawBox.Size = new System.Drawing.Size(80, 17);
+      this.NoRedrawBox.TabIndex = 25;
+      this.NoRedrawBox.Text = "No Redraw";
+      this.NoRedrawBox.UseVisualStyleBackColor = true;
+      // 
+      // GenerateSoundButton
+      // 
+      this.GenerateSoundButton.Location = new System.Drawing.Point(655, 50);
+      this.GenerateSoundButton.Name = "GenerateSoundButton";
+      this.GenerateSoundButton.Size = new System.Drawing.Size(75, 23);
+      this.GenerateSoundButton.TabIndex = 26;
+      this.GenerateSoundButton.Text = "Sound";
+      this.GenerateSoundButton.UseVisualStyleBackColor = true;
+      this.GenerateSoundButton.Click += new System.EventHandler(this.GenerateSoundButton_Click);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(987, 515);
+      this.Controls.Add(this.GenerateSoundButton);
+      this.Controls.Add(this.NoRedrawBox);
       this.Controls.Add(this.HideImageBox);
       this.Controls.Add(this.CoordYLabel);
       this.Controls.Add(this.CoordXLabel);
@@ -398,6 +422,8 @@
     private System.Windows.Forms.Label CoordXLabel;
     private System.Windows.Forms.Label CoordYLabel;
     private System.Windows.Forms.CheckBox HideImageBox;
+    private System.Windows.Forms.CheckBox NoRedrawBox;
+    private System.Windows.Forms.Button GenerateSoundButton;
   }
 }
 

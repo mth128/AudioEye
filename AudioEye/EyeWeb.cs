@@ -14,8 +14,9 @@ namespace AudioEye
 
     public EyeWeb(int subsectionsPerTone = 1, float powerBase = 1.8f, float centerSubstract = 0.5f)
     {
+      
       double toneWidth = 1.0 / subsectionsPerTone; 
-      for (int i = 0; i < 72; i++)
+      for (int i = 0; i < 84; i++)
       {
         for (int j = 0; j < subsectionsPerTone; j++)
         {
@@ -37,20 +38,19 @@ namespace AudioEye
       return shapes[rectangleIndex].GetPoints(extent, resolution, centerX, centerY);
     }
 
-    public void CopyDraw(Bitmap loadedImage, Bitmap webBitmap)
+    /// <summary>
+    /// returns an amplitude between -1 and 1. 
+    /// </summary>
+    /// <param name="time"></param>
+    /// <returns></returns>
+    public float GetAmplitude(double time)
     {
-      if (loadedImage == null)
-        return;
-      if (webBitmap == null)
-        return;
-      using (Graphics graphics = Graphics.FromImage(webBitmap))
-      {
-        foreach (EyeWebShape shape in shapes)
-        {
-          
-        }
-      }
+      float total = 0;
+      foreach (EyeWebShape shape in shapes)
+        total += shape.soundWave.GetAmplitude(time, shape.tint);
+      return total / shapes.Count / 256; 
     }
+
   }
 
   public class EyeWebShape
@@ -59,6 +59,9 @@ namespace AudioEye
     public PointF[] targetPoints;
     public PointF[] sourcePoints;
     public int tint = 0;
+    public double tone;
+    public SoundWave soundWave; 
+
 
     public EyeWebShape(double tone, double toneWidth = 1, float powerBase = 1.8f, float centerSubstract = 0.5f)
     {
@@ -67,6 +70,8 @@ namespace AudioEye
       coordinates[1] = new EyeWebCoordinate(tone+toneWidth, powerBase, centerSubstract);
       coordinates[2] = new EyeWebCoordinate(tone+12+toneWidth, powerBase, centerSubstract);
       coordinates[3] = new EyeWebCoordinate(tone+12, powerBase, centerSubstract);
+      this.tone = tone;
+      soundWave = new SoundWave(tone); 
     }
 
     public override string ToString()
@@ -85,12 +90,13 @@ namespace AudioEye
 
   public class EyeWebCoordinate
   {
+    public static int octaves = 7; 
     public float x;
     public float y; 
 
     public EyeWebCoordinate(double tone, float powerBase =1.8f, float centerSubstract = 0.5f, bool clockwise = false)
     {
-      double inverse = 72-tone;
+      double inverse = (octaves*12)-tone;
       if (inverse <0)
       {
         x = 0;

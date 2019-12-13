@@ -5,3 +5,5 @@
 /.vs/AudioEye/v16
 /AudioEye/bin/Debug
 /AudioEye/obj/Debug
+/AudioEye/bin
+/AudioEye/obj
