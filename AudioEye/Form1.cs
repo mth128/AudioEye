@@ -402,8 +402,8 @@ namespace AudioEye
     {
       if (eyeWeb == null)
         return;
-      int steps = 65336;
-      double duration = 2;
+      int steps = 48000;
+      double duration = 1;
       double frame = duration / steps;
 
       byte[] amplitudes = new byte[steps];
@@ -418,6 +418,12 @@ namespace AudioEye
           amplitudes[i] = Convert.ToByte(amplitude * 128 + 127);
       }
       SoundWave.Play(amplitudes);
+    }
+
+    private void TestExampleButton_Click(object sender, EventArgs e)
+    {
+      WaveGenerator waveGenerator = new WaveGenerator(WaveExampleType.ExampleSineWave);
+      waveGenerator.Save("D:\\debugTest.wav");
     }
   }
 

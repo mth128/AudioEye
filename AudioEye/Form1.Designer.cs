@@ -38,6 +38,9 @@
       this.button1 = new System.Windows.Forms.Button();
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.ImageBox = new System.Windows.Forms.PictureBox();
+      this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+      this.LeftBox = new System.Windows.Forms.PictureBox();
+      this.RightBox = new System.Windows.Forms.PictureBox();
       this.MonoBox = new System.Windows.Forms.PictureBox();
       this.button2 = new System.Windows.Forms.Button();
       this.SubsectionsPerToneBox = new System.Windows.Forms.TextBox();
@@ -57,18 +60,16 @@
       this.HideImageBox = new System.Windows.Forms.CheckBox();
       this.NoRedrawBox = new System.Windows.Forms.CheckBox();
       this.GenerateSoundButton = new System.Windows.Forms.Button();
-      this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-      this.LeftBox = new System.Windows.Forms.PictureBox();
-      this.RightBox = new System.Windows.Forms.PictureBox();
+      this.TestExampleButton = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.MonoBox)).BeginInit();
       this.tableLayoutPanel1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.RightBox)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.MonoBox)).BeginInit();
       this.SuspendLayout();
       // 
       // label2
@@ -178,14 +179,57 @@
       this.ImageBox.MouseHover += new System.EventHandler(this.PictureBox1_MouseHover);
       this.ImageBox.MouseMove += new System.Windows.Forms.MouseEventHandler(this.PictureBox1_MouseMove);
       // 
+      // tableLayoutPanel1
+      // 
+      this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.tableLayoutPanel1.ColumnCount = 3;
+      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+      this.tableLayoutPanel1.Controls.Add(this.LeftBox, 0, 0);
+      this.tableLayoutPanel1.Controls.Add(this.RightBox, 2, 0);
+      this.tableLayoutPanel1.Controls.Add(this.MonoBox, 1, 0);
+      this.tableLayoutPanel1.Location = new System.Drawing.Point(3, -1);
+      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
+      this.tableLayoutPanel1.RowCount = 1;
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(954, 184);
+      this.tableLayoutPanel1.TabIndex = 2;
+      // 
+      // LeftBox
+      // 
+      this.LeftBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.LeftBox.Location = new System.Drawing.Point(3, 3);
+      this.LeftBox.Name = "LeftBox";
+      this.LeftBox.Size = new System.Drawing.Size(312, 178);
+      this.LeftBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.LeftBox.TabIndex = 2;
+      this.LeftBox.TabStop = false;
+      // 
+      // RightBox
+      // 
+      this.RightBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.RightBox.Location = new System.Drawing.Point(639, 3);
+      this.RightBox.Name = "RightBox";
+      this.RightBox.Size = new System.Drawing.Size(312, 178);
+      this.RightBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.RightBox.TabIndex = 3;
+      this.RightBox.TabStop = false;
+      // 
       // MonoBox
       // 
       this.MonoBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.MonoBox.Location = new System.Drawing.Point(320, 3);
+      this.MonoBox.Location = new System.Drawing.Point(321, 3);
       this.MonoBox.Name = "MonoBox";
-      this.MonoBox.Size = new System.Drawing.Size(311, 178);
+      this.MonoBox.Size = new System.Drawing.Size(312, 178);
       this.MonoBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.MonoBox.TabIndex = 1;
       this.MonoBox.TabStop = false;
@@ -356,54 +400,22 @@
       this.GenerateSoundButton.UseVisualStyleBackColor = true;
       this.GenerateSoundButton.Click += new System.EventHandler(this.GenerateSoundButton_Click);
       // 
-      // tableLayoutPanel1
+      // TestExampleButton
       // 
-      this.tableLayoutPanel1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.tableLayoutPanel1.ColumnCount = 3;
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-      this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-      this.tableLayoutPanel1.Controls.Add(this.LeftBox, 0, 0);
-      this.tableLayoutPanel1.Controls.Add(this.RightBox, 2, 0);
-      this.tableLayoutPanel1.Controls.Add(this.MonoBox, 1, 0);
-      this.tableLayoutPanel1.Location = new System.Drawing.Point(3, -1);
-      this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-      this.tableLayoutPanel1.RowCount = 1;
-      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(954, 184);
-      this.tableLayoutPanel1.TabIndex = 2;
-      // 
-      // LeftBox
-      // 
-      this.LeftBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.LeftBox.Location = new System.Drawing.Point(3, 3);
-      this.LeftBox.Name = "LeftBox";
-      this.LeftBox.Size = new System.Drawing.Size(311, 178);
-      this.LeftBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.LeftBox.TabIndex = 2;
-      this.LeftBox.TabStop = false;
-      // 
-      // RightBox
-      // 
-      this.RightBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-      this.RightBox.Location = new System.Drawing.Point(637, 3);
-      this.RightBox.Name = "RightBox";
-      this.RightBox.Size = new System.Drawing.Size(314, 178);
-      this.RightBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.RightBox.TabIndex = 3;
-      this.RightBox.TabStop = false;
+      this.TestExampleButton.Location = new System.Drawing.Point(655, 79);
+      this.TestExampleButton.Name = "TestExampleButton";
+      this.TestExampleButton.Size = new System.Drawing.Size(75, 23);
+      this.TestExampleButton.TabIndex = 27;
+      this.TestExampleButton.Text = "Test Example";
+      this.TestExampleButton.UseVisualStyleBackColor = true;
+      this.TestExampleButton.Click += new System.EventHandler(this.TestExampleButton_Click);
       // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(987, 515);
+      this.Controls.Add(this.TestExampleButton);
       this.Controls.Add(this.GenerateSoundButton);
       this.Controls.Add(this.NoRedrawBox);
       this.Controls.Add(this.HideImageBox);
@@ -438,10 +450,10 @@
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
       this.splitContainer1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.MonoBox)).EndInit();
       this.tableLayoutPanel1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.RightBox)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.MonoBox)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -480,6 +492,7 @@
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     private System.Windows.Forms.PictureBox LeftBox;
     private System.Windows.Forms.PictureBox RightBox;
+    private System.Windows.Forms.Button TestExampleButton;
   }
 }
 
