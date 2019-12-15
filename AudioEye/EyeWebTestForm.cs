@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,7 +11,7 @@ using System.Windows.Forms;
 
 namespace AudioEye
 {
-  public partial class Form1 : Form
+  public partial class EyeWebTestForm : Form
   {
     private Bitmap loadedImage;
     private int resolution = 512;
@@ -28,7 +29,7 @@ namespace AudioEye
 
     private byte[] imageIntensityBytes; 
 
-    public Form1()
+    public EyeWebTestForm()
     {
       InitializeComponent();
     }
@@ -406,25 +407,32 @@ namespace AudioEye
       double duration = 1;
       double frame = duration / steps;
 
-      byte[] amplitudes = new byte[steps];
+      short[] amplitudes = new short[steps];
       for (int i =0; i<steps;i++)
       {
         float amplitude = eyeWeb.GetMonoAmplitude(i * frame);
         if (amplitude >= 1)
-          amplitudes[i] = 255;
+          amplitudes[i] = 32760;
         else if (amplitude < -1)
           amplitudes[i] = 0;
         else
-          amplitudes[i] = Convert.ToByte(amplitude * 128 + 127);
+          amplitudes[i] = Convert.ToInt16(amplitude * 16380+16380);
       }
       SoundWave.Play(amplitudes);
     }
 
     private void TestExampleButton_Click(object sender, EventArgs e)
     {
-      WaveGenerator waveGenerator = new WaveGenerator(WaveExampleType.ExampleSineWave);
-      waveGenerator.Save("D:\\debugTest.wav");
+      using (WaveGenerator waveGenerator = new WaveGenerator())
+      {
+        //waveGenerator.Save("D:\\debugTest.wav");
+        waveGenerator.GenerateSoundStream();
+        waveGenerator.Play();
+      }
     }
+
+  
+
   }
 
 

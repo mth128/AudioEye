@@ -54,14 +54,13 @@ namespace AudioEye
     }
 
 
-    public static void Play(byte[] bytes)
+    public static void Play(short[] soundData)
     {
-      // Place the data into a stream
-      using (WaveFile waveFile = new WaveFile(bytes))
+      using (WaveGenerator waveGenerator = new WaveGenerator(soundData))
       {
-        // Construct the sound player
-        SoundPlayer player = new SoundPlayer(waveFile.stream);
-        player.Play();
+        //waveGenerator.Save("D:\\debugTest.wav");
+        waveGenerator.GenerateSoundStream();
+        waveGenerator.Play();
       }
     }
   }

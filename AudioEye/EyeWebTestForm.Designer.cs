@@ -1,6 +1,6 @@
 ﻿namespace AudioEye
 {
-  partial class Form1
+  partial class EyeWebTestForm
   {
     /// <summary>
     /// Required designer variable.
