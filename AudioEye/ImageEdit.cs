@@ -11,10 +11,43 @@ namespace AudioEye
 {
   public class ImageEdit
   {
-    public static int GetValueOfArea(PointF[] shape, byte[] imageBytes, int width, int height)
+    public static StereoValue GetStereoValueOfArea(PointF[] shape, byte[] imageBytes, int width, int height, int leftBound, int rightBound)
+    {
+      float areaWidth = rightBound - leftBound;
+      List<PositionValue> values = GetPositionValues(shape, imageBytes, width, height);
+
+      if (values.Count == 0)
+        return new StereoValue(0, 0, 0);
+
+      float left = 0;
+      float mono = 0; 
+      float right = 0;
+
+      foreach (PositionValue value in values)
+      {
+        mono += value.value;
+        left += (rightBound - value.x) / areaWidth * value.value;
+        right += (value.x - leftBound) / areaWidth * value.value;
+      }
+
+      return new StereoValue(left / values.Count, mono / values.Count, right / values.Count);
+    }
+
+    public static int GetMonoValueOfArea(PointF[] shape, byte[] imageBytes, int width, int height)
+    {
+      List<PositionValue> values = GetPositionValues(shape, imageBytes,  width,  height);
+      int total = 0;
+      foreach (PositionValue value in values)
+        total += value.value;
+      if (total == 0)
+        return 0; 
+      return total / values.Count; 
+    }
+
+    public static List<PositionValue> GetPositionValues(PointF[] shape, byte[] imageBytes, int width, int height)
     {
       if (shape == null)
-        return 0; 
+        return new List<PositionValue>(); 
       int xMin = width;
       int yMin = height;
       int xMax = 0;
@@ -45,24 +78,17 @@ namespace AudioEye
       if (yMax > height)
         yMax = height;
 
-      int count = 0;
-      int total = 0; 
+
+      List<PositionValue> values = new List<PositionValue>(); 
       for (int y = yMin; y < yMax; y++)
       {
-        int i = y * width + xMin; 
-        for (int x = xMin; x < xMax; x++,i++)
-        {
-          if (IsInside(shape,x,y))
-          {
-            total += imageBytes[i];
-            count++; 
-          }
-        }
+        int i = y * width + xMin;
+        for (int x = xMin; x < xMax; x++, i++)
+          if (IsInside(shape, x, y))
+            values.Add(new PositionValue(x, imageBytes[i]));
       }
-      if (count == 0)
-        return 0; 
 
-      return total / count; 
+      return values; 
     }
 
     private static bool IsInside(PointF[] shape, int x, int y)
@@ -210,4 +236,31 @@ namespace AudioEye
       System.IO.File.WriteAllLines("D:\\debugGrey.txt", lines);
     }
   }
+
+  public class StereoValue
+  {
+    public float left;
+    public float mono;
+    public float right; 
+    public StereoValue(float left, float mono, float right)
+    {
+      this.left = left;
+      this.mono = mono; 
+      this.right = right; 
+    }
+  }
+
+  public class PositionValue
+  {
+    public int x;
+    public int value;
+    public PositionValue(int x, int value)
+    {
+      this.x = x;
+      this.value = value; 
+    }
+
+  }
+
+
 }

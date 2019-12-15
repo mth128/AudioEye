@@ -24,7 +24,7 @@ namespace AudioEye
 
     private EyeWeb eyeWeb;
 
-    private Bitmap webBitmap;
+    //private Bitmap webBitmap;
 
     private byte[] imageIntensityBytes; 
 
@@ -67,40 +67,79 @@ namespace AudioEye
         eyeWeb = new EyeWeb(subsectionsPerTone, powerBase, centerSubstract);
       }
 
-
+      eyeWeb.resolution = resolution;
+      eyeWeb.sourceCenterX = centerX;
+      eyeWeb.sourceCenterY = centerY; 
    
-      DrawWebOnSource(eyeWeb, resolution, centerX, centerY);
+      DrawWebOnSource(eyeWeb);
       if (loadedImage!=null)
         RecalculateWebIntensities(eyeWeb, imageIntensityBytes, loadedImage.Width, loadedImage.Height);
 
       if (redrawEyeWeb)
       {
-
-        Bitmap bitmap = new Bitmap(resolution, resolution);
-        pictureBox2.Image = bitmap;
-        webBitmap = bitmap;
-        using (Graphics graphics = Graphics.FromImage(bitmap))
+        int monoPortion = 1;
+        int stereoPortion = 4;
+        int portions = monoPortion + stereoPortion; 
+        //Drawing the mono shape. 
+        Bitmap monoBitmap = new Bitmap(resolution, resolution);
+        MonoBox.Image = monoBitmap;
+        using (Graphics graphics = Graphics.FromImage(monoBitmap))
         {
           graphics.Clear(Color.DarkBlue);
 
-          //Draw the connecting lines.
-          //using (Pen pen = new Pen(Color.Black))
+          foreach (EyeWebShape shape in eyeWeb.shapes)
           {
-            foreach (EyeWebShape shape in eyeWeb.shapes)
-            {
-              PointF[] points = new PointF[4];
-              for (int i = 0; i < 4; i++)
-                points[i] = shape.coordinates[i].PointF(eyeWeb.extent, resolution);
+            PointF[] points = new PointF[4];
+            for (int i = 0; i < 4; i++)
+              points[i] = shape.coordinates[i].PointF(eyeWeb.extent, resolution);
 
-              shape.targetPoints = points;
-              int tint = shape.tint;
-              using (Brush brush = new SolidBrush(Color.FromArgb(tint, tint, tint)))
-                graphics.FillPolygon(brush, points);
-              //graphics.DrawPolygon(pen, points);
-
-            }
+            shape.targetPoints = points;
+            int tint = shape.tintMono;
+            using (Brush brush = new SolidBrush(Color.FromArgb(tint, tint, tint)))
+              graphics.FillPolygon(brush, points);
           }
         }
+
+        //drawing the right box. 
+        Bitmap rightBitmap = new Bitmap(resolution, resolution);
+        RightBox.Image = rightBitmap;
+        using (Graphics graphics = Graphics.FromImage(rightBitmap))
+        {
+          graphics.Clear(Color.DarkBlue);
+
+          foreach (EyeWebShape shape in eyeWeb.shapes)
+          {
+            PointF[] points = new PointF[4];
+            for (int i = 0; i < 4; i++)
+              points[i] = shape.coordinates[i].PointF(eyeWeb.extent, resolution);
+
+            shape.targetPoints = points;
+            int tint = (stereoPortion * shape.tintRight + monoPortion * shape.tintMono) / (portions);
+            using (Brush brush = new SolidBrush(Color.FromArgb(tint, tint, tint)))
+              graphics.FillPolygon(brush, points);
+          }
+        }
+
+        //drawing the left box. 
+        Bitmap leftBitmap = new Bitmap(resolution, resolution);
+        LeftBox.Image = leftBitmap;
+        using (Graphics graphics = Graphics.FromImage(leftBitmap))
+        {
+          graphics.Clear(Color.DarkBlue);
+
+          foreach (EyeWebShape shape in eyeWeb.shapes)
+          {
+            PointF[] points = new PointF[4];
+            for (int i = 0; i < 4; i++)
+              points[i] = shape.coordinates[i].PointF(eyeWeb.extent, resolution);
+
+            shape.targetPoints = points;
+            int tint = (stereoPortion*shape.tintLeft + monoPortion*shape.tintMono)/(portions);
+            using (Brush brush = new SolidBrush(Color.FromArgb(tint, tint, tint)))
+              graphics.FillPolygon(brush, points);
+          }
+        }
+
 
         float centerX = Convert.ToSingle(TestXBox.Text);
         float centerY = Convert.ToSingle(TestYBox.Text);
@@ -142,7 +181,7 @@ namespace AudioEye
         if (ofd.ShowDialog() != DialogResult.OK)
           return;
 
-        PictureBox1.Image = loadedImage = ImageEdit.MakeGrayscale(Image.FromFile(ofd.FileName));
+        ImageBox.Image = loadedImage = ImageEdit.MakeGrayscale(Image.FromFile(ofd.FileName));
 
         imageIntensityBytes = ImageEdit.GetIntensityBytesFrom(loadedImage);
       }
@@ -160,31 +199,39 @@ namespace AudioEye
 
     private void RecalculateWebIntensities(EyeWeb eyeWeb, byte[] imageBytes, int width, int height)
     {
+      int leftBound = Convert.ToInt32(Math.Floor(eyeWeb.sourceCenterX - resolution / 2.0f));
+      int rightBound = Convert.ToInt32(Math.Ceiling(eyeWeb.sourceCenterX + resolution / 2.0f)); 
+
       if (imageBytes == null)
         return; 
       for (int i =0; i<eyeWeb.shapes.Count;i++)
       {
         EyeWebShape shape = eyeWeb.shapes[i];
-        shape.tint = ImageEdit.GetValueOfArea(shape.sourcePoints, imageBytes, width, height);
+        StereoValue values = ImageEdit.GetStereoValueOfArea(shape.sourcePoints, imageBytes, width, height, leftBound, rightBound);
+        shape.tintLeft = Convert.ToInt32(values.left);
+        shape.tintMono = Convert.ToInt32(values.mono);
+        shape.tintRight = Convert.ToInt32(values.right);
       }
 
     }
 
-    private void DrawWebOnSource(EyeWeb eyeWeb, float resolution, float centerX, float centerY)
+    private void DrawWebOnSource(EyeWeb eyeWeb )
     {
+
+
       if (loadedImage == null)
         return;
 
       for (int i = 0; i < eyeWeb.shapes.Count; i++)
       {
-        PointF[] points = eyeWeb.GetPoints(i, resolution, centerX, centerY);
+        PointF[] points = eyeWeb.GetPoints(i, eyeWeb.resolution, eyeWeb.sourceCenterX, eyeWeb.sourceCenterY);
         eyeWeb.shapes[i].sourcePoints = points;
       }
       if (NoRedrawBox.Checked)
         return; 
 
       Bitmap bitmap = new Bitmap(loadedImage);
-      PictureBox1.Image = bitmap; 
+      ImageBox.Image = bitmap; 
       using (Graphics graphics = Graphics.FromImage(bitmap))
       {
         if (HideImageBox.Checked)
@@ -310,14 +357,14 @@ namespace AudioEye
 
     public Point Image1Point()
     {
-      Point p = PictureBox1.PointToClient(Cursor.Position);
+      Point p = ImageBox.PointToClient(Cursor.Position);
       Point unscaled_p = new Point();
 
       // image and container dimensions
-      int w_i = PictureBox1.Image.Width;
-      int h_i = PictureBox1.Image.Height;
-      int w_c = PictureBox1.Width;
-      int h_c = PictureBox1.Height;
+      int w_i = ImageBox.Image.Width;
+      int h_i = ImageBox.Image.Height;
+      int w_c = ImageBox.Width;
+      int h_c = ImageBox.Height;
 
       float imageRatio = w_i / (float)h_i; // image W:H ratio
       float containerRatio = w_c / (float)h_c; // container W:H ratio
@@ -362,7 +409,7 @@ namespace AudioEye
       byte[] amplitudes = new byte[steps];
       for (int i =0; i<steps;i++)
       {
-        float amplitude = eyeWeb.GetAmplitude(i * frame);
+        float amplitude = eyeWeb.GetMonoAmplitude(i * frame);
         if (amplitude >= 1)
           amplitudes[i] = 255;
         else if (amplitude < -1)
@@ -370,6 +417,7 @@ namespace AudioEye
         else
           amplitudes[i] = Convert.ToByte(amplitude * 128 + 127);
       }
+      SoundWave.Play(amplitudes);
     }
   }
 

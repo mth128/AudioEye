@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -39,7 +41,7 @@ namespace AudioEye
       {
         sinArray = new float[65536];
         for (int i =0;i<65536;i++)
-          sinArray[i] = Convert.ToSingle((2 * Math.PI) * i / 65536.0);
+          sinArray[i] = Convert.ToSingle(Math.Sin((2 * Math.PI) * i / 65536.0));
       }
       if (index >= 65536)
         index -= 65536; 
@@ -51,5 +53,16 @@ namespace AudioEye
       return base.ToString() + " " + frequency.ToString();
     }
 
+
+    public static void Play(byte[] bytes)
+    {
+      // Place the data into a stream
+      using (WaveFile waveFile = new WaveFile(bytes))
+      {
+        // Construct the sound player
+        SoundPlayer player = new SoundPlayer(waveFile.stream);
+        player.Play();
+      }
+    }
   }
 }

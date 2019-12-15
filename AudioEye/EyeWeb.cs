@@ -11,6 +11,9 @@ namespace AudioEye
   {
     public readonly float extent = 0; 
     public readonly List<EyeWebShape> shapes = new List<EyeWebShape>();
+    public float resolution;
+    public float sourceCenterX;
+    public float sourceCenterY;
 
     public EyeWeb(int subsectionsPerTone = 1, float powerBase = 1.8f, float centerSubstract = 0.5f)
     {
@@ -43,11 +46,11 @@ namespace AudioEye
     /// </summary>
     /// <param name="time"></param>
     /// <returns></returns>
-    public float GetAmplitude(double time)
+    public float GetMonoAmplitude(double time)
     {
       float total = 0;
       foreach (EyeWebShape shape in shapes)
-        total += shape.soundWave.GetAmplitude(time, shape.tint);
+        total += shape.soundWave.GetAmplitude(time, shape.tintMono);
       return total / shapes.Count / 256; 
     }
 
@@ -58,7 +61,9 @@ namespace AudioEye
     public EyeWebCoordinate[] coordinates;
     public PointF[] targetPoints;
     public PointF[] sourcePoints;
-    public int tint = 0;
+    public int tintLeft = 0; 
+    public int tintMono = 0;
+    public int tintRight = 0; 
     public double tone;
     public SoundWave soundWave; 
 
