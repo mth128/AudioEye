@@ -331,6 +331,7 @@ namespace AudioEye
     {
       SoundPlayer player = new SoundPlayer(soundStream);
       player.Play();
+      //player.PlayLooping(); 
     }
 
 

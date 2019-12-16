@@ -91,7 +91,7 @@ namespace AudioEye
       return values; 
     }
 
-    private static bool IsInside(PointF[] shape, int x, int y)
+    public static bool IsInside(PointF[] shape, int x, int y)
     {
       bool result = false;
       if (IsRight(x, y, shape[0], shape[1]))

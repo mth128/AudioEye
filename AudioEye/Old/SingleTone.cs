@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AudioEye
 {
-  public class Vibe
+  public class SingleTone
   {
     public int octave = 4;//between 0 and 6. 
     public int note = 0; //between 0 and 11. 
@@ -16,7 +16,7 @@ namespace AudioEye
     public double FrequencyD => 16.35 * Math.Pow(2, Tone / 12.0);
     public int SystemNote => Clamp(  Convert.ToInt32(FrequencyD),37,32000); 
     
-    public Vibe(int octave, int note)
+    public SingleTone(int octave, int note)
     {
       this.octave = octave;
       this.note = note; 
@@ -30,8 +30,5 @@ namespace AudioEye
         return max;
       return value; 
     }
-
-
-
   }
 }
