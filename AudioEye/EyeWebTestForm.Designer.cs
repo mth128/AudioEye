@@ -33,9 +33,12 @@
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.ImageBox = new System.Windows.Forms.PictureBox();
       this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-      this.LeftBox = new System.Windows.Forms.PictureBox();
-      this.RightBox = new System.Windows.Forms.PictureBox();
+      this.label9 = new System.Windows.Forms.Label();
+      this.label8 = new System.Windows.Forms.Label();
       this.MonoBox = new System.Windows.Forms.PictureBox();
+      this.RightBox = new System.Windows.Forms.PictureBox();
+      this.LeftBox = new System.Windows.Forms.PictureBox();
+      this.label3 = new System.Windows.Forms.Label();
       this.button2 = new System.Windows.Forms.Button();
       this.SubsectionsPerToneBox = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
@@ -47,26 +50,25 @@
       this.label7 = new System.Windows.Forms.Label();
       this.CoordXLabel = new System.Windows.Forms.Label();
       this.CoordYLabel = new System.Windows.Forms.Label();
-      this.HideImageBox = new System.Windows.Forms.CheckBox();
-      this.NoRedrawBox = new System.Windows.Forms.CheckBox();
       this.GenerateSoundButton = new System.Windows.Forms.Button();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
-      this.OpenTestFormButton = new System.Windows.Forms.ToolStripButton();
       this.LoadImageButton = new System.Windows.Forms.ToolStripButton();
+      this.OpenTestFormButton = new System.Windows.Forms.ToolStripButton();
       this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
       this.ImageCoordXLabel = new System.Windows.Forms.Label();
       this.ImageCoordYLabel = new System.Windows.Forms.Label();
+      this.OriginalBox = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
       this.splitContainer1.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).BeginInit();
       this.tableLayoutPanel1.SuspendLayout();
-      ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.RightBox)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.MonoBox)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.RightBox)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).BeginInit();
       this.toolStrip1.SuspendLayout();
       this.SuspendLayout();
       // 
@@ -115,51 +117,91 @@
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
       this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-      this.tableLayoutPanel1.Controls.Add(this.LeftBox, 0, 0);
-      this.tableLayoutPanel1.Controls.Add(this.RightBox, 2, 0);
-      this.tableLayoutPanel1.Controls.Add(this.MonoBox, 1, 0);
+      this.tableLayoutPanel1.Controls.Add(this.label9, 2, 0);
+      this.tableLayoutPanel1.Controls.Add(this.label8, 1, 0);
+      this.tableLayoutPanel1.Controls.Add(this.MonoBox, 1, 1);
+      this.tableLayoutPanel1.Controls.Add(this.RightBox, 2, 1);
+      this.tableLayoutPanel1.Controls.Add(this.LeftBox, 0, 1);
+      this.tableLayoutPanel1.Controls.Add(this.label3, 0, 0);
       this.tableLayoutPanel1.Location = new System.Drawing.Point(3, -1);
       this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-      this.tableLayoutPanel1.RowCount = 1;
+      this.tableLayoutPanel1.RowCount = 2;
+      this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
       this.tableLayoutPanel1.Size = new System.Drawing.Size(953, 200);
       this.tableLayoutPanel1.TabIndex = 2;
       // 
-      // LeftBox
+      // label9
       // 
-      this.LeftBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+      this.label9.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.LeftBox.Location = new System.Drawing.Point(3, 3);
-      this.LeftBox.Name = "LeftBox";
-      this.LeftBox.Size = new System.Drawing.Size(311, 194);
-      this.LeftBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.LeftBox.TabIndex = 2;
-      this.LeftBox.TabStop = false;
+      this.label9.AutoSize = true;
+      this.label9.Location = new System.Drawing.Point(637, 0);
+      this.label9.Name = "label9";
+      this.label9.Size = new System.Drawing.Size(313, 13);
+      this.label9.TabIndex = 6;
+      this.label9.Text = "Right";
+      this.label9.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
-      // RightBox
+      // label8
       // 
-      this.RightBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+      this.label8.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.RightBox.Location = new System.Drawing.Point(637, 3);
-      this.RightBox.Name = "RightBox";
-      this.RightBox.Size = new System.Drawing.Size(313, 194);
-      this.RightBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-      this.RightBox.TabIndex = 3;
-      this.RightBox.TabStop = false;
+      this.label8.AutoSize = true;
+      this.label8.Location = new System.Drawing.Point(320, 0);
+      this.label8.Name = "label8";
+      this.label8.Size = new System.Drawing.Size(311, 13);
+      this.label8.TabIndex = 5;
+      this.label8.Text = "Mono";
+      this.label8.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
       // MonoBox
       // 
       this.MonoBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.MonoBox.Location = new System.Drawing.Point(320, 3);
+      this.MonoBox.Location = new System.Drawing.Point(320, 23);
       this.MonoBox.Name = "MonoBox";
-      this.MonoBox.Size = new System.Drawing.Size(311, 194);
+      this.MonoBox.Size = new System.Drawing.Size(311, 174);
       this.MonoBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.MonoBox.TabIndex = 1;
       this.MonoBox.TabStop = false;
+      // 
+      // RightBox
+      // 
+      this.RightBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.RightBox.Location = new System.Drawing.Point(637, 23);
+      this.RightBox.Name = "RightBox";
+      this.RightBox.Size = new System.Drawing.Size(313, 174);
+      this.RightBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.RightBox.TabIndex = 3;
+      this.RightBox.TabStop = false;
+      // 
+      // LeftBox
+      // 
+      this.LeftBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.LeftBox.Location = new System.Drawing.Point(3, 23);
+      this.LeftBox.Name = "LeftBox";
+      this.LeftBox.Size = new System.Drawing.Size(311, 174);
+      this.LeftBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+      this.LeftBox.TabIndex = 2;
+      this.LeftBox.TabStop = false;
+      // 
+      // label3
+      // 
+      this.label3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+      this.label3.AutoSize = true;
+      this.label3.Location = new System.Drawing.Point(3, 0);
+      this.label3.Name = "label3";
+      this.label3.Size = new System.Drawing.Size(311, 13);
+      this.label3.TabIndex = 4;
+      this.label3.Text = "Left";
+      this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
       // button2
       // 
@@ -261,26 +303,6 @@
       this.CoordYLabel.TabIndex = 23;
       this.CoordYLabel.Text = "0";
       // 
-      // HideImageBox
-      // 
-      this.HideImageBox.AutoSize = true;
-      this.HideImageBox.Location = new System.Drawing.Point(225, 27);
-      this.HideImageBox.Name = "HideImageBox";
-      this.HideImageBox.Size = new System.Drawing.Size(79, 17);
-      this.HideImageBox.TabIndex = 24;
-      this.HideImageBox.Text = "Hide image";
-      this.HideImageBox.UseVisualStyleBackColor = true;
-      // 
-      // NoRedrawBox
-      // 
-      this.NoRedrawBox.AutoSize = true;
-      this.NoRedrawBox.Location = new System.Drawing.Point(310, 27);
-      this.NoRedrawBox.Name = "NoRedrawBox";
-      this.NoRedrawBox.Size = new System.Drawing.Size(80, 17);
-      this.NoRedrawBox.TabIndex = 25;
-      this.NoRedrawBox.Text = "No Redraw";
-      this.NoRedrawBox.UseVisualStyleBackColor = true;
-      // 
       // GenerateSoundButton
       // 
       this.GenerateSoundButton.Location = new System.Drawing.Point(655, 60);
@@ -294,23 +316,13 @@
       // toolStrip1
       // 
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.OpenTestFormButton,
-            this.LoadImageButton});
+            this.LoadImageButton,
+            this.OpenTestFormButton});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.Size = new System.Drawing.Size(986, 25);
       this.toolStrip1.TabIndex = 28;
       this.toolStrip1.Text = "toolStrip1";
-      // 
-      // OpenTestFormButton
-      // 
-      this.OpenTestFormButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.OpenTestFormButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenTestFormButton.Image")));
-      this.OpenTestFormButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.OpenTestFormButton.Name = "OpenTestFormButton";
-      this.OpenTestFormButton.Size = new System.Drawing.Size(23, 22);
-      this.OpenTestFormButton.ToolTipText = "Open Test Form";
-      this.OpenTestFormButton.Click += new System.EventHandler(this.OpenTestForm_Click);
       // 
       // LoadImageButton
       // 
@@ -321,6 +333,16 @@
       this.LoadImageButton.Size = new System.Drawing.Size(23, 22);
       this.LoadImageButton.Text = "Load Image";
       this.LoadImageButton.Click += new System.EventHandler(this.LoadImageButton_Click);
+      // 
+      // OpenTestFormButton
+      // 
+      this.OpenTestFormButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.OpenTestFormButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenTestFormButton.Image")));
+      this.OpenTestFormButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.OpenTestFormButton.Name = "OpenTestFormButton";
+      this.OpenTestFormButton.Size = new System.Drawing.Size(23, 22);
+      this.OpenTestFormButton.ToolTipText = "Open Test Form";
+      this.OpenTestFormButton.Click += new System.EventHandler(this.OpenTestForm_Click);
       // 
       // UpdateTimer
       // 
@@ -364,19 +386,31 @@
       this.ImageCoordYLabel.TabIndex = 32;
       this.ImageCoordYLabel.Text = "0";
       // 
+      // OriginalBox
+      // 
+      this.OriginalBox.AutoSize = true;
+      this.OriginalBox.Checked = true;
+      this.OriginalBox.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.OriginalBox.Location = new System.Drawing.Point(229, 29);
+      this.OriginalBox.Name = "OriginalBox";
+      this.OriginalBox.Size = new System.Drawing.Size(61, 17);
+      this.OriginalBox.TabIndex = 33;
+      this.OriginalBox.Text = "Original";
+      this.OriginalBox.UseVisualStyleBackColor = true;
+      this.OriginalBox.CheckedChanged += new System.EventHandler(this.OriginalBox_CheckedChanged);
+      // 
       // EyeWebTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(986, 555);
+      this.Controls.Add(this.OriginalBox);
       this.Controls.Add(this.ImageCoordYLabel);
       this.Controls.Add(this.ImageCoordXLabel);
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.toolStrip1);
       this.Controls.Add(this.GenerateSoundButton);
-      this.Controls.Add(this.NoRedrawBox);
-      this.Controls.Add(this.HideImageBox);
       this.Controls.Add(this.CoordYLabel);
       this.Controls.Add(this.CoordXLabel);
       this.Controls.Add(this.label7);
@@ -397,9 +431,10 @@
       this.splitContainer1.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.ImageBox)).EndInit();
       this.tableLayoutPanel1.ResumeLayout(false);
-      ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.RightBox)).EndInit();
+      this.tableLayoutPanel1.PerformLayout();
       ((System.ComponentModel.ISupportInitialize)(this.MonoBox)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.RightBox)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).EndInit();
       this.toolStrip1.ResumeLayout(false);
       this.toolStrip1.PerformLayout();
       this.ResumeLayout(false);
@@ -422,8 +457,6 @@
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.Label CoordXLabel;
     private System.Windows.Forms.Label CoordYLabel;
-    private System.Windows.Forms.CheckBox HideImageBox;
-    private System.Windows.Forms.CheckBox NoRedrawBox;
     private System.Windows.Forms.Button GenerateSoundButton;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     private System.Windows.Forms.PictureBox LeftBox;
@@ -436,6 +469,10 @@
     private System.Windows.Forms.Label label2;
     private System.Windows.Forms.Label ImageCoordXLabel;
     private System.Windows.Forms.Label ImageCoordYLabel;
+    private System.Windows.Forms.Label label9;
+    private System.Windows.Forms.Label label8;
+    private System.Windows.Forms.Label label3;
+    private System.Windows.Forms.CheckBox OriginalBox;
   }
 }
 

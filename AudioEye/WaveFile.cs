@@ -174,6 +174,7 @@ namespace AudioEye
   {
     ExampleSineWave = 0
   }
+
   public class WaveGenerator: IDisposable
   {
     // Header, Format, Data chunks
@@ -191,13 +192,9 @@ namespace AudioEye
         GenerateDefault();
         return;       
       }
-      List<short> doubleData = new List<short>();
-      doubleData.AddRange(soundData);
-      doubleData.AddRange(soundData);
-      data.shortArray = doubleData.ToArray(); 
+      data.shortArray = soundData;
       // Calculate data chunk size in bytes
       data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));
-
     }
 
     /// <summary>
@@ -329,8 +326,8 @@ namespace AudioEye
 
     public void Play()
     {
-      SoundPlayer player = new SoundPlayer(soundStream);
-      player.Play();
+      using (SoundPlayer player = new SoundPlayer(soundStream))
+        player.Play();
       //player.PlayLooping(); 
     }
 

@@ -112,6 +112,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Files\download.jpg" />
+    <Content Include="Files\openfile.png" />
     <Content Include="sine.wav">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

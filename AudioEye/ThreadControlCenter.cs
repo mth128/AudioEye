@@ -13,8 +13,8 @@ namespace AudioEye
     public bool Stop { get; set; } = false; 
 
     //main ThreadControlCenter
-    private static ThreadControlCenter main = null;
-    public static ThreadControlCenter Main => main == null? main = new ThreadControlCenter() : main; 
+    private static ThreadControlCenter main = new ThreadControlCenter();
+    public static ThreadControlCenter Main => main; 
      
     //Active source images. 
     private object imageLock = new object();
@@ -92,6 +92,13 @@ namespace AudioEye
       set { lock (pointLock) rightPoint = value; }
     }
 
+    //Booleans
+    public bool DrawOriginal { get; set; } = true;
+
+    //Reference time
+    public DateTime StartOfProgram { get; set; } = DateTime.Now;
+    public double SecondsSinceStart => (DateTime.Now - StartOfProgram).TotalSeconds;
+
     //Threads 
     private BackgroundWorker audioPlayer = new BackgroundWorker();
     private BackgroundWorker audioUpdater = new BackgroundWorker();
@@ -113,6 +120,7 @@ namespace AudioEye
       imagePainter.DoWork += ImagePainterWork;
       imagePainter.RunWorkerAsync();
     }
+
 
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
@@ -205,7 +213,10 @@ namespace AudioEye
                 if (point!=previousPoint || eyeWeb!=previousEyeWeb || originalImage != previousImage)
                 {
                   changed = true;
-                  editedOriginal = eyeWeb.DrawOn(originalImage, point);
+                  if (DrawOriginal)
+                    editedOriginal = eyeWeb.DrawOn(originalImage, point);
+                  else
+                    editedOriginal = eyeWeb.DrawOn(originalImage, point, true);
                 }
               }
               break;

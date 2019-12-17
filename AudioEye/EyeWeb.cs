@@ -78,7 +78,7 @@ namespace AudioEye
     {
       int x = 0;
       int size = PointShapeIndex.Length;
-      int[] intensities = new int[shapes.Count];
+      long[] intensitiesLong = new long[shapes.Count];
 
       for (int i = 0; i < size; i++, x++)
       {
@@ -91,19 +91,19 @@ namespace AudioEye
         int intensity = grayscaleIndex[i];
 
         if (left)
-          intensities[shapeIndex] += intensity * (Resolution - x);
+          intensitiesLong[shapeIndex] += intensity * (Resolution - x);
         else if (right)
-          intensities[shapeIndex] += intensity * x;
-        else intensities[shapeIndex] += intensity * Resolution;
+          intensitiesLong[shapeIndex] += intensity * x;
+        else intensitiesLong[shapeIndex] += intensity * Resolution;
       }
-
+      int[] intensities = new int[shapes.Count]; 
       for (int s = 0; s < shapes.Count; s++)
       {
         int devisor = Resolution * PointShapeIndexCounter[s];
         if (devisor == 0)
           intensities[s] = 0;
         else
-          intensities[s] /= devisor;
+          intensities[s] = (int)(intensitiesLong[s]/devisor);
       }
       return intensities;
     }
@@ -128,7 +128,7 @@ namespace AudioEye
     }*/
 
   
-    public Bitmap DrawOn(Image image, Point center)
+    public Bitmap DrawOn(Image image, Point center, bool clear = false)
     {
       if (image == null)
         return null;
@@ -141,7 +141,11 @@ namespace AudioEye
         sourcePoints.Add(points);
       }
 
-      Bitmap bitmap = new Bitmap(image);
+      Bitmap bitmap;
+      if (clear)
+        bitmap = new Bitmap(image.Width, image.Height);
+      else
+        bitmap = new Bitmap(image);
       using (Graphics graphics = Graphics.FromImage(bitmap))
       {
         //Draw the connecting lines.
@@ -166,6 +170,11 @@ namespace AudioEye
         {
           EyeWebShape shape = shapes[i];
           int tint = intensities[i]; 
+          if (tint<0)
+            tint = 0;
+          if (tint > 255)
+            tint = 255; 
+
           using (Brush brush = new SolidBrush(Color.FromArgb(tint, tint, tint)))
             graphics.FillPolygon(brush, shape.targetPoints);
         }

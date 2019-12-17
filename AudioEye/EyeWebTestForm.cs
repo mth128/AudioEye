@@ -224,27 +224,25 @@ namespace AudioEye
 
     private void GenerateSoundButton_Click(object sender, EventArgs e)
     {
-      /*
-      EyeWeb eyeWeb = ThreadControlCenter.Main.ActiveEyeWeb; 
-      if (eyeWeb == null)
-        return;
-      int steps = 48000;
+      Snapshot snapshot = ThreadControlCenter.Main.ActiveSnapshot;
+      int bytesPerSecond = 48000;
       double duration = 1;
-      double frame = duration / steps;
+      double frame = duration / bytesPerSecond;
+      int steps = Convert.ToInt32(bytesPerSecond * duration);
 
       short[] amplitudes = new short[steps];
-      for (int i =0; i<steps;i++)
-      {
-        float amplitude = eyeWeb.GetMonoAmplitude(i * frame);
-        if (amplitude >= 1)
-          amplitudes[i] = 32760;
-        else if (amplitude < -1)
-          amplitudes[i] = 0;
-        else
-          amplitudes[i] = Convert.ToInt16(amplitude * 16380+16380);
-      }
+      double start = ThreadControlCenter.Main.SecondsSinceStart;
+      Parallel.For(0, steps, i =>
+       {
+         float amplitude = snapshot.GetAmplitude(i * frame + start, 0);
+         if (amplitude >= 1)
+           amplitudes[i] = 32760;
+         else if (amplitude < -1)
+           amplitudes[i] = 0;
+         else
+           amplitudes[i] = Convert.ToInt16(amplitude * 16380 + 16380);
+       });
       SoundWave.Play(amplitudes);
-      */
     }
 
 
@@ -279,8 +277,10 @@ namespace AudioEye
       RightBox.Image = ThreadControlCenter.Main.OutputBitmapRight;
       MonoBox.Image = ThreadControlCenter.Main.OutputBitmapMono;
     }
+
+    private void OriginalBox_CheckedChanged(object sender, EventArgs e)
+    {
+      ThreadControlCenter.Main.DrawOriginal = OriginalBox.Checked;
+    }
   }
-
-
-
 }

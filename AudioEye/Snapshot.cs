@@ -14,12 +14,16 @@ namespace AudioEye
   /// </summary>
   public class Snapshot
   {
+    private int size; 
     public int[] Left { get; private set; }
     public int[] Mono { get; private set; }
     public int[] Right { get; private set; }
 
+    public EyeWeb EyeWeb { get; private set; }
+
     public Snapshot(StereoImage stereoImage, EyeWeb eyeWeb, int centerX, int centerY)
     {
+      EyeWeb = eyeWeb; 
       int resolution = eyeWeb.Resolution; 
       int halfResolution = resolution/2;
       int left = centerX - halfResolution;
@@ -39,6 +43,39 @@ namespace AudioEye
               break;
           }
         });
+      size = eyeWeb.shapes.Count; 
+    }
+
+    /// <summary>
+    /// returns an amplitude between -1 and 1. 
+    /// </summary>
+    /// <param name="time"></param>
+    /// <param name="direction">-1 for left, 0 for mono, 1 for right.</param>
+    /// <returns></returns>
+    public float GetAmplitude(double time, int direction, float amplify = 1.0f)
+    {
+      int[] activeArray;
+      switch (direction)
+      {
+        case -1:
+          activeArray = Left;
+          break;
+        case 0:
+          activeArray = Mono;
+          break;
+        case 1:
+          activeArray = Right;
+          break;
+        default:
+          throw new Exception("Wrong value for direction. Choose -1 for left, 0 for mono and 1 for right.");
+      }
+
+      float total = 0;
+
+      for (int i = 0; i < size; i++)
+        total += EyeWeb.shapes[i].soundWave.GetAmplitude(time, activeArray[i]);
+      
+      return total / size / 256 * amplify;
     }
   }
 }
