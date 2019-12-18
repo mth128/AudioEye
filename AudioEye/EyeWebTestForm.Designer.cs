@@ -39,7 +39,6 @@
       this.RightBox = new System.Windows.Forms.PictureBox();
       this.LeftBox = new System.Windows.Forms.PictureBox();
       this.label3 = new System.Windows.Forms.Label();
-      this.button2 = new System.Windows.Forms.Button();
       this.SubsectionsPerToneBox = new System.Windows.Forms.TextBox();
       this.label4 = new System.Windows.Forms.Label();
       this.PowerBaseBox = new System.Windows.Forms.TextBox();
@@ -50,7 +49,6 @@
       this.label7 = new System.Windows.Forms.Label();
       this.CoordXLabel = new System.Windows.Forms.Label();
       this.CoordYLabel = new System.Windows.Forms.Label();
-      this.GenerateSoundButton = new System.Windows.Forms.Button();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.LoadImageButton = new System.Windows.Forms.ToolStripButton();
       this.OpenTestFormButton = new System.Windows.Forms.ToolStripButton();
@@ -61,6 +59,12 @@
       this.ImageCoordYLabel = new System.Windows.Forms.Label();
       this.OriginalBox = new System.Windows.Forms.CheckBox();
       this.AudioBox = new System.Windows.Forms.CheckBox();
+      this.label10 = new System.Windows.Forms.Label();
+      this.AmplitudeLeftBox = new System.Windows.Forms.TextBox();
+      this.label11 = new System.Windows.Forms.Label();
+      this.AmplitudeMonoBox = new System.Windows.Forms.TextBox();
+      this.label12 = new System.Windows.Forms.Label();
+      this.AmplitudeRightBox = new System.Windows.Forms.TextBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -204,19 +208,9 @@
       this.label3.Text = "Left";
       this.label3.TextAlign = System.Drawing.ContentAlignment.TopCenter;
       // 
-      // button2
-      // 
-      this.button2.Location = new System.Drawing.Point(655, 28);
-      this.button2.Name = "button2";
-      this.button2.Size = new System.Drawing.Size(75, 23);
-      this.button2.TabIndex = 9;
-      this.button2.Text = "Draw Web";
-      this.button2.UseVisualStyleBackColor = true;
-      this.button2.Click += new System.EventHandler(this.Button2_Click);
-      // 
       // SubsectionsPerToneBox
       // 
-      this.SubsectionsPerToneBox.Location = new System.Drawing.Point(527, 31);
+      this.SubsectionsPerToneBox.Location = new System.Drawing.Point(438, 27);
       this.SubsectionsPerToneBox.Name = "SubsectionsPerToneBox";
       this.SubsectionsPerToneBox.Size = new System.Drawing.Size(100, 20);
       this.SubsectionsPerToneBox.TabIndex = 11;
@@ -226,7 +220,7 @@
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(396, 34);
+      this.label4.Location = new System.Drawing.Point(307, 30);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(112, 13);
       this.label4.TabIndex = 10;
@@ -234,7 +228,7 @@
       // 
       // PowerBaseBox
       // 
-      this.PowerBaseBox.Location = new System.Drawing.Point(527, 57);
+      this.PowerBaseBox.Location = new System.Drawing.Point(438, 53);
       this.PowerBaseBox.Name = "PowerBaseBox";
       this.PowerBaseBox.Size = new System.Drawing.Size(100, 20);
       this.PowerBaseBox.TabIndex = 13;
@@ -244,7 +238,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(396, 60);
+      this.label5.Location = new System.Drawing.Point(307, 56);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(64, 13);
       this.label5.TabIndex = 12;
@@ -252,7 +246,7 @@
       // 
       // CenterSubstractBox
       // 
-      this.CenterSubstractBox.Location = new System.Drawing.Point(527, 83);
+      this.CenterSubstractBox.Location = new System.Drawing.Point(438, 79);
       this.CenterSubstractBox.Name = "CenterSubstractBox";
       this.CenterSubstractBox.Size = new System.Drawing.Size(100, 20);
       this.CenterSubstractBox.TabIndex = 15;
@@ -262,7 +256,7 @@
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(396, 86);
+      this.label6.Location = new System.Drawing.Point(307, 82);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(86, 13);
       this.label6.TabIndex = 14;
@@ -270,7 +264,7 @@
       // 
       // ResolutionBox
       // 
-      this.ResolutionBox.Location = new System.Drawing.Point(820, 31);
+      this.ResolutionBox.Location = new System.Drawing.Point(641, 30);
       this.ResolutionBox.Name = "ResolutionBox";
       this.ResolutionBox.Size = new System.Drawing.Size(100, 20);
       this.ResolutionBox.TabIndex = 16;
@@ -280,7 +274,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(745, 34);
+      this.label7.Location = new System.Drawing.Point(566, 33);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(57, 13);
       this.label7.TabIndex = 17;
@@ -303,16 +297,6 @@
       this.CoordYLabel.Size = new System.Drawing.Size(13, 13);
       this.CoordYLabel.TabIndex = 23;
       this.CoordYLabel.Text = "0";
-      // 
-      // GenerateSoundButton
-      // 
-      this.GenerateSoundButton.Location = new System.Drawing.Point(655, 60);
-      this.GenerateSoundButton.Name = "GenerateSoundButton";
-      this.GenerateSoundButton.Size = new System.Drawing.Size(75, 23);
-      this.GenerateSoundButton.TabIndex = 26;
-      this.GenerateSoundButton.Text = "Sound";
-      this.GenerateSoundButton.UseVisualStyleBackColor = true;
-      this.GenerateSoundButton.Click += new System.EventHandler(this.GenerateSoundButton_Click);
       // 
       // toolStrip1
       // 
@@ -413,11 +397,71 @@
       this.AudioBox.UseVisualStyleBackColor = true;
       this.AudioBox.CheckedChanged += new System.EventHandler(this.AudioBox_CheckedChanged);
       // 
+      // label10
+      // 
+      this.label10.AutoSize = true;
+      this.label10.Location = new System.Drawing.Point(776, 34);
+      this.label10.Name = "label10";
+      this.label10.Size = new System.Drawing.Size(77, 13);
+      this.label10.TabIndex = 36;
+      this.label10.Text = "Amplitude Left:";
+      // 
+      // AmplitudeLeftBox
+      // 
+      this.AmplitudeLeftBox.Location = new System.Drawing.Point(868, 30);
+      this.AmplitudeLeftBox.Name = "AmplitudeLeftBox";
+      this.AmplitudeLeftBox.Size = new System.Drawing.Size(100, 20);
+      this.AmplitudeLeftBox.TabIndex = 35;
+      this.AmplitudeLeftBox.Text = "1";
+      this.AmplitudeLeftBox.TextChanged += new System.EventHandler(this.AmplitudeLeftBox_TextChanged);
+      // 
+      // label11
+      // 
+      this.label11.AutoSize = true;
+      this.label11.Location = new System.Drawing.Point(776, 60);
+      this.label11.Name = "label11";
+      this.label11.Size = new System.Drawing.Size(86, 13);
+      this.label11.TabIndex = 38;
+      this.label11.Text = "Amplitude Mono:";
+      // 
+      // AmplitudeMonoBox
+      // 
+      this.AmplitudeMonoBox.Location = new System.Drawing.Point(868, 56);
+      this.AmplitudeMonoBox.Name = "AmplitudeMonoBox";
+      this.AmplitudeMonoBox.Size = new System.Drawing.Size(100, 20);
+      this.AmplitudeMonoBox.TabIndex = 37;
+      this.AmplitudeMonoBox.Text = "1";
+      this.AmplitudeMonoBox.TextChanged += new System.EventHandler(this.AmplitudeMonoBox_TextChanged);
+      // 
+      // label12
+      // 
+      this.label12.AutoSize = true;
+      this.label12.Location = new System.Drawing.Point(776, 86);
+      this.label12.Name = "label12";
+      this.label12.Size = new System.Drawing.Size(84, 13);
+      this.label12.TabIndex = 40;
+      this.label12.Text = "Amplitude Right:";
+      // 
+      // AmplitudeRightBox
+      // 
+      this.AmplitudeRightBox.Location = new System.Drawing.Point(868, 82);
+      this.AmplitudeRightBox.Name = "AmplitudeRightBox";
+      this.AmplitudeRightBox.Size = new System.Drawing.Size(100, 20);
+      this.AmplitudeRightBox.TabIndex = 39;
+      this.AmplitudeRightBox.Text = "1";
+      this.AmplitudeRightBox.TextChanged += new System.EventHandler(this.AmplitudeRightBox_TextChanged);
+      // 
       // EyeWebTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(986, 555);
+      this.Controls.Add(this.label12);
+      this.Controls.Add(this.AmplitudeRightBox);
+      this.Controls.Add(this.label11);
+      this.Controls.Add(this.AmplitudeMonoBox);
+      this.Controls.Add(this.label10);
+      this.Controls.Add(this.AmplitudeLeftBox);
       this.Controls.Add(this.AudioBox);
       this.Controls.Add(this.OriginalBox);
       this.Controls.Add(this.ImageCoordYLabel);
@@ -425,7 +469,6 @@
       this.Controls.Add(this.label2);
       this.Controls.Add(this.label1);
       this.Controls.Add(this.toolStrip1);
-      this.Controls.Add(this.GenerateSoundButton);
       this.Controls.Add(this.CoordYLabel);
       this.Controls.Add(this.CoordXLabel);
       this.Controls.Add(this.label7);
@@ -436,7 +479,6 @@
       this.Controls.Add(this.label5);
       this.Controls.Add(this.SubsectionsPerToneBox);
       this.Controls.Add(this.label4);
-      this.Controls.Add(this.button2);
       this.Controls.Add(this.splitContainer1);
       this.Name = "EyeWebTestForm";
       this.Text = "Audio Eye";
@@ -461,7 +503,6 @@
     private System.Windows.Forms.SplitContainer splitContainer1;
     private System.Windows.Forms.PictureBox ImageBox;
     private System.Windows.Forms.PictureBox MonoBox;
-    private System.Windows.Forms.Button button2;
     private System.Windows.Forms.TextBox SubsectionsPerToneBox;
     private System.Windows.Forms.Label label4;
     private System.Windows.Forms.TextBox PowerBaseBox;
@@ -472,7 +513,6 @@
     private System.Windows.Forms.Label label7;
     private System.Windows.Forms.Label CoordXLabel;
     private System.Windows.Forms.Label CoordYLabel;
-    private System.Windows.Forms.Button GenerateSoundButton;
     private System.Windows.Forms.TableLayoutPanel tableLayoutPanel1;
     private System.Windows.Forms.PictureBox LeftBox;
     private System.Windows.Forms.PictureBox RightBox;
@@ -489,6 +529,12 @@
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.CheckBox OriginalBox;
     private System.Windows.Forms.CheckBox AudioBox;
+    private System.Windows.Forms.Label label10;
+    private System.Windows.Forms.TextBox AmplitudeLeftBox;
+    private System.Windows.Forms.Label label11;
+    private System.Windows.Forms.TextBox AmplitudeMonoBox;
+    private System.Windows.Forms.Label label12;
+    private System.Windows.Forms.TextBox AmplitudeRightBox;
   }
 }
 

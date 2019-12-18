@@ -290,5 +290,41 @@ namespace AudioEye
     {
       ThreadControlCenter.Main.AudioOn = AudioBox.Checked;
     }
+
+    private void AmplitudeLeftBox_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        ThreadControlCenter.Main.AmplifyLeft = Convert.ToSingle(AmplitudeLeftBox.Text); 
+      }
+      catch
+      {
+        ThreadControlCenter.Main.AmplifyLeft = 1; 
+      }
+    }
+
+    private void AmplitudeMonoBox_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        ThreadControlCenter.Main.AmplifyMono = Convert.ToSingle(AmplitudeMonoBox.Text);
+      }
+      catch
+      {
+        ThreadControlCenter.Main.AmplifyMono = 1;
+      }
+    }
+
+    private void AmplitudeRightBox_TextChanged(object sender, EventArgs e)
+    {
+      try
+      {
+        ThreadControlCenter.Main.AmplifyRight = Convert.ToSingle(AmplitudeRightBox.Text);
+      }
+      catch
+      {
+        ThreadControlCenter.Main.AmplifyRight = 1;
+      }
+    }
   }
 }

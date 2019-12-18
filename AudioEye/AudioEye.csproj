@@ -77,7 +77,7 @@
     </Compile>
     <Compile Include="ThreadControlCenter.cs" />
     <Compile Include="Old\SingleTone.cs" />
-    <Compile Include="WaveFile.cs" />
+    <Compile Include="WaveGenerator.cs" />
     <EmbeddedResource Include="Controls\TextBoxTrackBar.resx">
       <DependentUpon>TextBoxTrackBar.cs</DependentUpon>
     </EmbeddedResource>

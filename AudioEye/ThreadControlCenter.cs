@@ -108,8 +108,11 @@ namespace AudioEye
     private short[] monoSample;
     private short[] rightSample;
     private MemoryStream monoStream;
-    private AudioBlock audioBlock = new AudioBlock(); 
+    private AudioBlock audioBlock = new AudioBlock();
 
+    public float AmplifyLeft { get; set; } = 1;
+    public float AmplifyMono { get; set; } = 1; 
+    public float AmplifyRight { get; set; } = 1; 
     public short[] LeftSample
     {
       get { lock (audioLock) return leftSample; }
@@ -183,7 +186,7 @@ namespace AudioEye
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
       SoundPlayer soundPlayer = new SoundPlayer(); 
-      short[] previousSample = null; 
+      //short[] previousSample = null; 
       while (!Stop)
       {
         /*
@@ -202,7 +205,10 @@ namespace AudioEye
         soundPlayer.LoadAsync(); 
         soundPlayer.Play();
         */
-        WaveGenerator waveGenerator = new WaveGenerator(AudioBlock.Mono);
+        AudioBlock audioBlock = AudioBlock;
+        short[] stereo = audioBlock.MakeStereo(); 
+
+        WaveGenerator waveGenerator = new WaveGenerator(stereo);
         waveGenerator.GenerateSoundStream();
         waveGenerator.Play(); 
         System.Threading.Thread.Sleep(500);
@@ -237,28 +243,33 @@ namespace AudioEye
           System.Threading.Thread.Sleep(1);
           continue;
         }
+        float amplifyLeft = AmplifyLeft;
+        float amplifyMono = AmplifyMono;
+        float amplifyRight = AmplifyRight;
+
         AudioBlock audioBlock = AudioBlock; 
         Parallel.For(0, 6, i =>
          {
+           //generating 2 blocks at once, in order to keep up with the pace. 
            switch (i)
            {
             case 0:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, -1);
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, -1, amplifyLeft);
               break;
             case 1:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 0);
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 0, amplifyMono);
               break;
             case 2:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 1);
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 1, amplifyRight);
               break;
             case 3:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, -1);
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, -1, amplifyLeft);
               break;
             case 4:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 0);
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 0, amplifyMono);
               break;
             case 5:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 1);
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 1, amplifyRight);
               break;
            }
          });

@@ -32,6 +32,18 @@ namespace AudioEye
         Left[i] = Mono[i] = Right[i] = 0; 
     }
 
+    internal short[] MakeStereo()
+    {
+      int size = Left.Length; 
+      short[] stereo = new short[size* 2];
+      for (int i = 0; i < size; i++)
+      {
+        stereo[i * 2] = Left[i];
+        stereo[i * 2 + 1] = Right[i]; 
+      }
+      return stereo; 
+    }
+
     /*
     public void Register(int blockIndex, short[] left, short[] mono, short[] right)
     {
