@@ -46,6 +46,16 @@ namespace AudioEye
       size = eyeWeb.shapes.Count; 
     }
 
+    public short AmplitudeToShort(float amplitude)
+    {
+      if (amplitude >= 1)
+        return 32760;
+      else if (amplitude < -1)
+        return  0;
+      else
+        return Convert.ToInt16(amplitude * 16380 + 16380);
+    }
+
     public void Generate10msSoundBlock(AudioBlock audioBlock, int blockIndex, double time, int direction, float amplify = 1.0f, int valuesPerSecond = 48000)
     {
       int sequence = blockIndex /audioBlock.BlockCount;
@@ -69,7 +79,7 @@ namespace AudioEye
          else if (amplitude < -1)
            amplitudes[position] = 0;
          else
-           amplitudes[position] = Convert.ToInt16(amplitude * 16380 + 16380);
+           amplitudes[position] = AmplitudeToShort(amplitude);
        }
     }
 
@@ -103,6 +113,11 @@ namespace AudioEye
         total += EyeWeb.shapes[i].soundWave.GetAmplitude(time, activeArray[i]);
       
       return total / size / 256 * amplify;
+    }
+
+    public short GetShortAmplitude (double time, int direction, float amplify = 1.0f)
+    {
+      return AmplitudeToShort(GetAmplitude(time, direction, amplify)); 
     }
   }
 }

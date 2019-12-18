@@ -108,7 +108,44 @@ namespace AudioEye
     private short[] monoSample;
     private short[] rightSample;
     private MemoryStream monoStream;
-    private AudioBlock audioBlock = new AudioBlock();
+    private StereoWaveBuffer[] stereoWaveBuffers = new StereoWaveBuffer[4];
+    private int readingBufferIndex = -1;
+    private int readyToPlayBufferIndex = -1; 
+    private int writingBufferIndex = -1;
+    private float bufferDuration = 0.1f; 
+      
+    //This should only be called by the audio writer. 
+    private StereoWaveBuffer GetWriteBuffer()
+    {
+      lock (audioLock)
+      {
+        readyToPlayBufferIndex = writingBufferIndex;
+        writingBufferIndex = -1;
+        for (int i = 0; i <stereoWaveBuffers.Length;i++)
+        {
+          if (i == readingBufferIndex || i == readyToPlayBufferIndex)
+            continue;
+          writingBufferIndex = i;
+          break; 
+        }
+        if (writingBufferIndex == -1)
+          return null;
+        return stereoWaveBuffers[writingBufferIndex]; 
+      }
+    }
+
+    //This should only be called by the audio reader. 
+    public StereoWaveBuffer GetReadBuffer()
+    {
+      lock (audioLock)
+      {
+        readingBufferIndex = readyToPlayBufferIndex; 
+        if (readyToPlayBufferIndex == -1)
+          return null;
+
+        return stereoWaveBuffers[readingBufferIndex]; 
+      }
+    }
 
     public float AmplifyLeft { get; set; } = 1;
     public float AmplifyMono { get; set; } = 1; 
@@ -131,11 +168,18 @@ namespace AudioEye
       set { lock (audioLock) rightSample = value; }
     }
 
+    private void InitializeStereoBuffers()
+    {
+      for (int i = 0; i < stereoWaveBuffers.Length; i++)
+        stereoWaveBuffers[i] = WaveGenerator.GenerateDefaultStereoWaveBuffer(bufferDuration);
+    }
+
+    /*
     public AudioBlock AudioBlock
     {
       get { lock (audioLock) return audioBlock; }
       set { lock (audioLock) audioBlock = value; }
-    }
+    }*/
 
     public int BytesPerSecond { get; set; } = 48000;
 
@@ -185,7 +229,8 @@ namespace AudioEye
 
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
-      SoundPlayer soundPlayer = new SoundPlayer(); 
+      SoundPlayer soundPlayer = new SoundPlayer();
+
       //short[] previousSample = null; 
       while (!Stop)
       {
@@ -205,6 +250,16 @@ namespace AudioEye
         soundPlayer.LoadAsync(); 
         soundPlayer.Play();
         */
+
+        StereoWaveBuffer buffer = GetReadBuffer();
+        if (buffer== null)
+        {
+          System.Threading.Thread.Sleep(1);
+          continue; 
+        }
+        buffer.Play();
+        
+        /*
         AudioBlock audioBlock = AudioBlock;
         short[] stereo = audioBlock.MakeStereo(); 
 
@@ -212,11 +267,14 @@ namespace AudioEye
         waveGenerator.GenerateSoundStream();
         waveGenerator.Play(); 
         System.Threading.Thread.Sleep(500);
+        */
       }
     }
 
     private void AudioUpdaterWork(object sender, DoWorkEventArgs e)
     {
+      InitializeStereoBuffers();
+
       double nextUpdateTime = -1;
       int blockIndex = 0;
       WaveGenerator waveGenerator = new WaveGenerator();
@@ -229,7 +287,7 @@ namespace AudioEye
       
           blockIndex = (int)Math.Ceiling(currentTime * 100);
           currentBlockTime = blockIndex / 100.0;
-          nextUpdateTime = currentTime + 0.011;
+          nextUpdateTime = currentTime + 0.001;
         }
         else
         {
@@ -243,6 +301,17 @@ namespace AudioEye
           System.Threading.Thread.Sleep(1);
           continue;
         }
+
+        StereoWaveBuffer buffer = GetWriteBuffer();
+        if (buffer == null)
+        {
+          System.Threading.Thread.Sleep(1); 
+          continue;
+        }
+
+        buffer.Write(snapshot, currentBlockTime, AmplifyLeft, AmplifyRight); 
+
+        /*
         float amplifyLeft = AmplifyLeft;
         float amplifyMono = AmplifyMono;
         float amplifyRight = AmplifyRight;
@@ -273,7 +342,7 @@ namespace AudioEye
               break;
            }
          });
-
+         */
       }
 
     }

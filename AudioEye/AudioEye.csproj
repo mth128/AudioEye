@@ -69,6 +69,7 @@
     <Compile Include="Snapshot.cs" />
     <Compile Include="SoundWave.cs" />
     <Compile Include="StereoImage.cs" />
+    <Compile Include="StereoWaveBuffer.cs" />
     <Compile Include="TestForm.cs">
       <SubType>Form</SubType>
     </Compile>

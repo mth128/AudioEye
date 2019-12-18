@@ -44,31 +44,5 @@ namespace AudioEye
       return stereo; 
     }
 
-    /*
-    public void Register(int blockIndex, short[] left, short[] mono, short[] right)
-    {
-      int sequence = blockIndex / BlockCount;
-      blockIndex %= BlockCount;
-      int position = BlockSize * blockIndex;
-
-      //keep track of what blocks are filled for debugging purposes. 
-      Filled[blockIndex] = sequence;
-
-      Parallel.For(0, 3, i =>
-      {
-        switch (i)
-        {
-          case 0:
-            Array.Copy(left, 0, Left, position, BlockSize);
-            break;
-          case 1:
-            Array.Copy(mono, 0, Mono, position, BlockSize);
-            break;
-          case 2:
-            Array.Copy(right, 0, Right, position, BlockSize);
-            break; 
-        }
-      });
-    }*/
   }
 }
