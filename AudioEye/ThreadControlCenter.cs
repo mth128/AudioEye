@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.IO;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -94,10 +96,66 @@ namespace AudioEye
 
     //Booleans
     public bool DrawOriginal { get; set; } = true;
+    public bool AudioOn { get; set; } = true;
 
     //Reference time
     public DateTime StartOfProgram { get; set; } = DateTime.Now;
     public double SecondsSinceStart => (DateTime.Now - StartOfProgram).TotalSeconds;
+
+    //Audio
+    private object audioLock = new object();
+    private short[] leftSample; 
+    private short[] monoSample;
+    private short[] rightSample;
+    private MemoryStream monoStream;
+    private AudioBlock audioBlock = new AudioBlock(); 
+
+    public short[] LeftSample
+    {
+      get { lock (audioLock) return leftSample; }
+      set { lock (audioLock) leftSample = value; }
+    }
+
+    public short[] MonoSample
+    {
+      get { lock (audioLock) return monoSample; }
+      set { lock (audioLock) monoSample = value; }
+    }
+
+    public short[] RightSample
+    {
+      get { lock (audioLock) return rightSample; }
+      set { lock (audioLock) rightSample = value; }
+    }
+
+    public AudioBlock AudioBlock
+    {
+      get { lock (audioLock) return audioBlock; }
+      set { lock (audioLock) audioBlock = value; }
+    }
+
+    public int BytesPerSecond { get; set; } = 48000;
+
+    public MemoryStream MonoStream
+    {
+      get {
+        lock (audioLock)
+        {
+          MemoryStream memoryStream = monoStream;
+          monoStream = null; 
+          return memoryStream;
+        }
+      }
+      set
+      {
+        lock (audioLock)
+        {
+          if (monoStream != null)
+            monoStream.Dispose();
+          monoStream = value; 
+        }
+      }
+    }
 
     //Threads 
     private BackgroundWorker audioPlayer = new BackgroundWorker();
@@ -124,19 +182,92 @@ namespace AudioEye
 
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
+      SoundPlayer soundPlayer = new SoundPlayer(); 
+      short[] previousSample = null; 
       while (!Stop)
       {
-        System.Threading.Thread.Sleep(1); 
+        /*
+        short[] sample = ThreadControlCenter.Main.MonoSample;
+        if (sample == previousSample)
+        {
+          System.Threading.Thread.Sleep(1);
+          continue; 
+        }
+        MemoryStream stream = ThreadControlCenter.Main.MonoStream; 
+        if (stream == null)
+          continue; 
+        
+        previousSample = sample;
+        soundPlayer.Stream = stream;
+        soundPlayer.LoadAsync(); 
+        soundPlayer.Play();
+        */
+        WaveGenerator waveGenerator = new WaveGenerator(AudioBlock.Mono);
+        waveGenerator.GenerateSoundStream();
+        waveGenerator.Play(); 
+        System.Threading.Thread.Sleep(500);
       }
     }
 
     private void AudioUpdaterWork(object sender, DoWorkEventArgs e)
     {
+      double nextUpdateTime = -1;
+      int blockIndex = 0;
+      WaveGenerator waveGenerator = new WaveGenerator();
+      double currentBlockTime = 0; 
       while (!Stop)
       {
-        System.Threading.Thread.Sleep(1);
+        double currentTime = ThreadControlCenter.Main.SecondsSinceStart;
+        if (currentTime>=nextUpdateTime)
+        {
+      
+          blockIndex = (int)Math.Ceiling(currentTime * 100);
+          currentBlockTime = blockIndex / 100.0;
+          nextUpdateTime = currentTime + 0.011;
+        }
+        else
+        {
+          System.Threading.Thread.Sleep(1);
+          continue; 
+        }
+
+        Snapshot snapshot = ThreadControlCenter.Main.ActiveSnapshot;
+        if (snapshot == null)
+        {
+          System.Threading.Thread.Sleep(1);
+          continue;
+        }
+        AudioBlock audioBlock = AudioBlock; 
+        Parallel.For(0, 6, i =>
+         {
+           switch (i)
+           {
+            case 0:
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, -1);
+              break;
+            case 1:
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 0);
+              break;
+            case 2:
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 1);
+              break;
+            case 3:
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, -1);
+              break;
+            case 4:
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 0);
+              break;
+            case 5:
+              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 1);
+              break;
+           }
+         });
+
       }
+
     }
+
+ 
 
     private void SnapshotCapturerWork(object sender, DoWorkEventArgs e)
     {

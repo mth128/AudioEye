@@ -224,28 +224,31 @@ namespace AudioEye
 
     private void GenerateSoundButton_Click(object sender, EventArgs e)
     {
+      PlaySingleAudioShot(); 
+    }
+
+    private void PlaySingleAudioShot()
+    {
       Snapshot snapshot = ThreadControlCenter.Main.ActiveSnapshot;
       int bytesPerSecond = 48000;
-      double duration = 1;
+      double duration = 0.5;
       double frame = duration / bytesPerSecond;
       int steps = Convert.ToInt32(bytesPerSecond * duration);
 
       short[] amplitudes = new short[steps];
       double start = ThreadControlCenter.Main.SecondsSinceStart;
       Parallel.For(0, steps, i =>
-       {
-         float amplitude = snapshot.GetAmplitude(i * frame + start, 0);
-         if (amplitude >= 1)
-           amplitudes[i] = 32760;
-         else if (amplitude < -1)
-           amplitudes[i] = 0;
-         else
-           amplitudes[i] = Convert.ToInt16(amplitude * 16380 + 16380);
-       });
+      {
+        float amplitude = snapshot.GetAmplitude(i * frame + start, 0);
+        if (amplitude >= 1)
+          amplitudes[i] = 32760;
+        else if (amplitude < -1)
+          amplitudes[i] = 0;
+        else
+          amplitudes[i] = Convert.ToInt16(amplitude * 16380 + 16380);
+      });
       SoundWave.Play(amplitudes);
     }
-
-
 
     private void OpenTestForm_Click(object sender, EventArgs e)
     {
@@ -281,6 +284,11 @@ namespace AudioEye
     private void OriginalBox_CheckedChanged(object sender, EventArgs e)
     {
       ThreadControlCenter.Main.DrawOriginal = OriginalBox.Checked;
+    }
+
+    private void AudioBox_CheckedChanged(object sender, EventArgs e)
+    {
+      ThreadControlCenter.Main.AudioOn = AudioBox.Checked;
     }
   }
 }

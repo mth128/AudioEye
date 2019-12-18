@@ -60,6 +60,7 @@
       this.ImageCoordXLabel = new System.Windows.Forms.Label();
       this.ImageCoordYLabel = new System.Windows.Forms.Label();
       this.OriginalBox = new System.Windows.Forms.CheckBox();
+      this.AudioBox = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -399,11 +400,25 @@
       this.OriginalBox.UseVisualStyleBackColor = true;
       this.OriginalBox.CheckedChanged += new System.EventHandler(this.OriginalBox_CheckedChanged);
       // 
+      // AudioBox
+      // 
+      this.AudioBox.AutoSize = true;
+      this.AudioBox.Checked = true;
+      this.AudioBox.CheckState = System.Windows.Forms.CheckState.Checked;
+      this.AudioBox.Location = new System.Drawing.Point(229, 56);
+      this.AudioBox.Name = "AudioBox";
+      this.AudioBox.Size = new System.Drawing.Size(53, 17);
+      this.AudioBox.TabIndex = 34;
+      this.AudioBox.Text = "Audio";
+      this.AudioBox.UseVisualStyleBackColor = true;
+      this.AudioBox.CheckedChanged += new System.EventHandler(this.AudioBox_CheckedChanged);
+      // 
       // EyeWebTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(986, 555);
+      this.Controls.Add(this.AudioBox);
       this.Controls.Add(this.OriginalBox);
       this.Controls.Add(this.ImageCoordYLabel);
       this.Controls.Add(this.ImageCoordXLabel);
@@ -473,6 +488,7 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.CheckBox OriginalBox;
+    private System.Windows.Forms.CheckBox AudioBox;
   }
 }
 

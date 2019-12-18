@@ -183,7 +183,9 @@ namespace AudioEye
     WaveDataChunk data = new WaveDataChunk();
 
     MemoryStream soundStream;
-    BinaryWriter writer; 
+    BinaryWriter writer;
+    SoundPlayer soundPlayer = new SoundPlayer();
+    public double sampleDuration = 0; 
 
     public WaveGenerator(short[] soundData = null)
     {
@@ -192,10 +194,18 @@ namespace AudioEye
         GenerateDefault();
         return;       
       }
+      SetSoundData(soundData); 
+    }
+
+    public void SetSoundData(short[] soundData)
+    {
       data.shortArray = soundData;
       // Calculate data chunk size in bytes
-      data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));
+      int length = data.shortArray.Length; 
+      data.dwChunkSize = (uint)(length * (format.wBitsPerSample / 8));
+      sampleDuration = ((double)length) / 48000; 
     }
+
 
     /// <summary>
     /// A single sine wave. 
@@ -230,6 +240,11 @@ namespace AudioEye
       
     }
 
+    internal void LooseStream()
+    {
+      soundStream = null; 
+    }
+
     public void Dispose()
     {
       // Clean up
@@ -239,7 +254,8 @@ namespace AudioEye
       writer.Close();
       soundStream.Close();
       writer.Dispose();
-      soundStream.Dispose(); 
+      soundStream.Dispose();
+      soundPlayer.Dispose(); 
     }
 
     public void Save(string filePath)
@@ -285,8 +301,8 @@ namespace AudioEye
     public MemoryStream GenerateSoundStream()
     {
       if (soundStream != null)
-        throw new Exception("Can only generate stream once."); 
-      // Create a file (it always overwrites)
+        throw new Exception("Dispose the previous soundstream first, before generating a new one."); 
+      // Create a new memory stream. 
       soundStream = new MemoryStream();
 
       // Use BinaryWriter to write the bytes to the file
@@ -326,13 +342,36 @@ namespace AudioEye
 
     public void Play()
     {
-      using (SoundPlayer player = new SoundPlayer(soundStream))
-        player.Play();
-      //player.PlayLooping(); 
+      if (!DebugTime())
+      {
+        System.Threading.Thread.Sleep(1); 
+        return;
+      }
+      soundPlayer.Stream = soundStream; 
+      soundPlayer.Play();
     }
 
+    static double debugNextStart = 0; 
 
+    private bool DebugTime()
+    {
+      double now = ThreadControlCenter.Main.SecondsSinceStart;
+      if (now>debugNextStart)
+      {
+        debugNextStart = now + sampleDuration;
+        return true; 
+      }
+      return false; 
+    }
 
+    internal void DisposeSoundStream()
+    {
+      if (soundStream == null)
+        return;
+      soundStream.Dispose();
+      soundStream = null;
+      return; 
+    }
   }
 
     

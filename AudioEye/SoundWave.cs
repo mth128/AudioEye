@@ -53,7 +53,6 @@ namespace AudioEye
       return base.ToString() + " " + frequency.ToString();
     }
 
-
     public static void Play(short[] soundData)
     {
       using (WaveGenerator waveGenerator = new WaveGenerator(soundData))

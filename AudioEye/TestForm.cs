@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Media;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -35,6 +36,21 @@ namespace AudioEye
         waveGenerator.GenerateSoundStream();
         waveGenerator.Play();
       }
+    }
+
+    SoundPlayer soundPlayer = new SoundPlayer();
+    WaveGenerator waveGenerator = new WaveGenerator();
+
+    private void Button1_Click(object sender, EventArgs e)
+    { 
+      if (soundPlayer.Stream == null) 
+        soundPlayer.Stream = waveGenerator.GenerateSoundStream();
+      soundPlayer.PlayLooping(); 
+    }
+
+    private void Button2_Click(object sender, EventArgs e)
+    {
+      soundPlayer.Stop(); 
     }
   }
 }

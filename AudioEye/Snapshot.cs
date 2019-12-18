@@ -46,6 +46,33 @@ namespace AudioEye
       size = eyeWeb.shapes.Count; 
     }
 
+    public void Generate10msSoundBlock(AudioBlock audioBlock, int blockIndex, double time, int direction, float amplify = 1.0f, int valuesPerSecond = 48000)
+    {
+      int sequence = blockIndex /audioBlock.BlockCount;
+      blockIndex %= audioBlock.BlockCount;
+      int position = audioBlock.BlockSize * blockIndex;
+
+      int count = valuesPerSecond / 100;
+      double frame = 1.0 / valuesPerSecond;
+
+      //choose in which array to write. 
+      short[] amplitudes = direction == -1 ? audioBlock.Left : direction == +1 ? audioBlock.Right : audioBlock.Mono;
+
+      //keep track of what blocks are filled for debugging purposes. 
+      audioBlock.Filled[blockIndex] = sequence;
+
+      for (int i = 0; i<count; i++,position++)
+       {
+         float amplitude = GetAmplitude(i * frame + time, 0) * amplify;
+         if (amplitude >= 1)
+           amplitudes[position] = 32760;
+         else if (amplitude < -1)
+           amplitudes[position] = 0;
+         else
+           amplitudes[position] = Convert.ToInt16(amplitude * 16380 + 16380);
+       }
+    }
+
     /// <summary>
     /// returns an amplitude between -1 and 1. 
     /// </summary>
