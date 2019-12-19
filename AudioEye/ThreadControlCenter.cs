@@ -12,16 +12,16 @@ namespace AudioEye
 {
   public class ThreadControlCenter
   {
-    public bool Stop { get; set; } = false; 
+    public bool Stop { get; set; } = false;
 
     //main ThreadControlCenter
     private static ThreadControlCenter main = new ThreadControlCenter();
-    public static ThreadControlCenter Main => main; 
-     
+    public static ThreadControlCenter Main => main;
+
     //Active source images. 
     private object imageLock = new object();
     private StereoImage stereoImage;
-    private Image originalImage; 
+    private Image originalImage;
     public StereoImage ActiveStereoImage
     {
       get { lock (imageLock) return stereoImage; }
@@ -33,7 +33,7 @@ namespace AudioEye
       get { lock (imageLock) return originalImage; }
       set { lock (imageLock) originalImage = value; }
     }
-    
+
     //Active EyeWeb
     private object eyeWebLock = new object();
     private EyeWeb activeEyeWeb;
@@ -55,9 +55,9 @@ namespace AudioEye
     //Active output bitmaps
     private object outputBitmapsLock = new object();
     private Bitmap outputBitmapLeft;
-    private Bitmap outputBitmapMono; 
+    private Bitmap outputBitmapMono;
     private Bitmap outputBitmapRight;
-    private Bitmap editedOriginal; 
+    private Bitmap editedOriginal;
     public Bitmap OutputBitmapLeft
     {
       get { lock (outputBitmapsLock) return outputBitmapLeft; }
@@ -104,16 +104,30 @@ namespace AudioEye
 
     //Audio
     private object audioLock = new object();
-    private short[] leftSample; 
-    private short[] monoSample;
-    private short[] rightSample;
-    private MemoryStream monoStream;
-    private StereoWaveBuffer[] stereoWaveBuffers = new StereoWaveBuffer[4];
-    private int readingBufferIndex = -1;
-    private int readyToPlayBufferIndex = -1; 
-    private int writingBufferIndex = -1;
-    private float bufferDuration = 0.1f; 
+    private AudioStream audioStream;
+
+    public AudioStream ActiveAudioStream 
+    {
+      get
+      {
+        lock (audioLock) return audioStream; 
+      }
+      set
+      {
+        lock (audioLock) audioStream = value; 
+      }
+    }
+    //private short[] leftSample; 
+    //private short[] monoSample;
+    //private short[] rightSample;
+    //private MemoryStream monoStream;
+    //private StereoWaveBuffer[] stereoWaveBuffers = new StereoWaveBuffer[4];
+    //private int readingBufferIndex = -1;
+    //private int readyToPlayBufferIndex = -1; 
+    //private int writingBufferIndex = -1;
+    //private float bufferDuration = 0.1f; 
       
+      /*
     //This should only be called by the audio writer. 
     private StereoWaveBuffer GetWriteBuffer()
     {
@@ -145,11 +159,13 @@ namespace AudioEye
 
         return stereoWaveBuffers[readingBufferIndex]; 
       }
-    }
+    }*/
 
     public float AmplifyLeft { get; set; } = 1;
     public float AmplifyMono { get; set; } = 1; 
     public float AmplifyRight { get; set; } = 1; 
+
+    /*
     public short[] LeftSample
     {
       get { lock (audioLock) return leftSample; }
@@ -173,6 +189,7 @@ namespace AudioEye
       for (int i = 0; i < stereoWaveBuffers.Length; i++)
         stereoWaveBuffers[i] = WaveGenerator.GenerateDefaultStereoWaveBuffer(bufferDuration);
     }
+    */
 
     /*
     public AudioBlock AudioBlock
@@ -181,8 +198,8 @@ namespace AudioEye
       set { lock (audioLock) audioBlock = value; }
     }*/
 
-    public int BytesPerSecond { get; set; } = 48000;
-
+    //public int BytesPerSecond { get; set; } = 48000;
+    /*
     public MemoryStream MonoStream
     {
       get {
@@ -202,7 +219,7 @@ namespace AudioEye
           monoStream = value; 
         }
       }
-    }
+    }*/
 
     //Threads 
     private BackgroundWorker audioPlayer = new BackgroundWorker();
@@ -229,8 +246,6 @@ namespace AudioEye
 
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
-      SoundPlayer soundPlayer = new SoundPlayer();
-
       //short[] previousSample = null; 
       while (!Stop)
       {
@@ -251,14 +266,27 @@ namespace AudioEye
         soundPlayer.Play();
         */
 
-        StereoWaveBuffer buffer = GetReadBuffer();
-        if (buffer== null)
+        AudioStream audioStream = new AudioStream(4);
+        ActiveAudioStream = audioStream;
+        bool error = false; 
+        using (SoundPlayer soundPlayer = new SoundPlayer(audioStream))
         {
-          System.Threading.Thread.Sleep(1);
-          continue; 
+          try
+          {
+            soundPlayer.Play();
+          }
+          catch (Exception ex)
+          {
+            error = true; 
+            soundPlayer.Stop(); 
+          }
         }
-        buffer.Play();
-        
+        for (int i = 0; i < 60; i++)
+        {
+          if (error)
+            break; 
+          System.Threading.Thread.Sleep(1000);
+        }
         /*
         AudioBlock audioBlock = AudioBlock;
         short[] stereo = audioBlock.MakeStereo(); 
@@ -273,76 +301,35 @@ namespace AudioEye
 
     private void AudioUpdaterWork(object sender, DoWorkEventArgs e)
     {
-      InitializeStereoBuffers();
-
-      double nextUpdateTime = -1;
-      int blockIndex = 0;
-      WaveGenerator waveGenerator = new WaveGenerator();
-      double currentBlockTime = 0; 
       while (!Stop)
       {
-        double currentTime = ThreadControlCenter.Main.SecondsSinceStart;
-        if (currentTime>=nextUpdateTime)
-        {
-      
-          blockIndex = (int)Math.Ceiling(currentTime * 100);
-          currentBlockTime = blockIndex / 100.0;
-          nextUpdateTime = currentTime + 0.001;
-        }
-        else
-        {
-          System.Threading.Thread.Sleep(1);
-          continue; 
-        }
-
-        Snapshot snapshot = ThreadControlCenter.Main.ActiveSnapshot;
-        if (snapshot == null)
+        AudioStream audioStream = ThreadControlCenter.Main.ActiveAudioStream;
+        if (ThreadControlCenter.Main.ActiveSnapshot == null || audioStream == null || !audioStream.ReadyForWrite)
         {
           System.Threading.Thread.Sleep(1);
           continue;
         }
+        audioStream.StartTime = ThreadControlCenter.Main.SecondsSinceStart +1;
+        Parallel.For(0, 4, threadIndex =>{
+            //doing this in multiple threads to speed it up. 
 
-        StereoWaveBuffer buffer = GetWriteBuffer();
-        if (buffer == null)
-        {
-          System.Threading.Thread.Sleep(1); 
-          continue;
-        }
+            int index = audioStream.GetNextBlockIndex();
+            while (index >= 0 && !Stop)
+            {
+              double time = audioStream.GetBlockTime(index);
+              while (ThreadControlCenter.Main.SecondsSinceStart < time && !Stop)
+                System.Threading.Thread.Sleep(1);
 
-        buffer.Write(snapshot, currentBlockTime, AmplifyLeft, AmplifyRight); 
+              Snapshot snapshot = ThreadControlCenter.Main.ActiveSnapshot;
+              Audio10msBlock block = Audio10msBlock.FromSnapshot(snapshot, time, ThreadControlCenter.Main.AmplifyLeft, ThreadControlCenter.Main.AmplifyRight);
 
-        /*
-        float amplifyLeft = AmplifyLeft;
-        float amplifyMono = AmplifyMono;
-        float amplifyRight = AmplifyRight;
+              audioStream.SetBlock(index, block);
+              index = audioStream.GetNextBlockIndex();
 
-        AudioBlock audioBlock = AudioBlock; 
-        Parallel.For(0, 6, i =>
-         {
-           //generating 2 blocks at once, in order to keep up with the pace. 
-           switch (i)
-           {
-            case 0:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, -1, amplifyLeft);
-              break;
-            case 1:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 0, amplifyMono);
-              break;
-            case 2:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex, currentBlockTime, 1, amplifyRight);
-              break;
-            case 3:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, -1, amplifyLeft);
-              break;
-            case 4:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 0, amplifyMono);
-              break;
-            case 5:
-              snapshot.Generate10msSoundBlock(audioBlock, blockIndex+1, currentBlockTime + 0.01, 1, amplifyRight);
-              break;
-           }
-         });
-         */
+            if (audioStream != ThreadControlCenter.Main.ActiveAudioStream)
+              break; 
+            }
+          });
       }
 
     }

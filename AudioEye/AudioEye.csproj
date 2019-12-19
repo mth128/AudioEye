@@ -46,7 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AudioBlock.cs" />
+    <Compile Include="AudioStream.cs" />
     <Compile Include="Controls\TextBoxTrackBar.cs">
       <SubType>UserControl</SubType>
     </Compile>
