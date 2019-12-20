@@ -53,7 +53,7 @@ namespace AudioEye
       else if (amplitude < -1)
         return  0;
       else
-        return Convert.ToInt16(amplitude * 16380 + 16380);
+        return Convert.ToInt16(amplitude * 32760);
     }
 
     /*
@@ -117,31 +117,34 @@ namespace AudioEye
       return total / size / 256 * amplify;
     }
 
-    public short GetShortLeftAmplitude(double time, float amplify)
+    private short GetShortAmplitude(double time, float amplify, int[] values)
     {
       float total = 0;
-      int[] values = Left; 
       for (int i = 0; i < size; i++)
         total += EyeWeb.shapes[i].soundWave.GetAmplitude(time, values[i]);
-      return AmplitudeToShort(total / size / 256 * amplify);
+
+      float amplitude = total / size * 255 * amplify;
+
+      if (amplitude > 32760)
+        return 32760;
+      if (amplitude < -32760)
+        return -32760;
+      return (short)amplitude;
+    }
+
+    public short GetShortLeftAmplitude(double time, float amplify)
+    {
+      return GetShortAmplitude(time, amplify, Left); 
     }
 
     public short GetShortMonoAmplitude(double time, float amplify)
     {
-      float total = 0;
-      int[] values = Mono;
-      for (int i = 0; i < size; i++)
-        total += EyeWeb.shapes[i].soundWave.GetAmplitude(time, values[i]);
-      return AmplitudeToShort(total / size / 256 * amplify);
+      return GetShortAmplitude(time, amplify, Mono);
     }
 
     public short GetShortRightAmplitude(double time, float amplify)
     {
-      float total = 0;
-      int[] values = Right;
-      for (int i = 0; i < size; i++)
-        total += EyeWeb.shapes[i].soundWave.GetAmplitude(time, values[i]);
-      return AmplitudeToShort(total / size / 256 * amplify);
+      return GetShortAmplitude(time, amplify, Right);
     }
 
 

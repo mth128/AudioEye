@@ -245,7 +245,7 @@ namespace AudioEye
         else if (amplitude < -1)
           amplitudes[i] = 0;
         else
-          amplitudes[i] = Convert.ToInt16(amplitude * 16380 + 16380);
+          amplitudes[i] = Convert.ToInt16(amplitude * 32760);
       });
       SoundWave.Play(amplitudes);
     }

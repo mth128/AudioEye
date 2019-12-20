@@ -31,10 +31,43 @@ namespace AudioEye
       Index = index;
       Start = Index * BufferSize;
       End = (Index + 1) * BufferSize;
+      /*
+      using (MemoryStream memoryStream = new MemoryStream())
+      {
+        using (BinaryWriter writer = new BinaryWriter(memoryStream))
+          for (int i = 0; i < SamplesPerBlock; i++)
+          {
+              writer.Write(left[i]);
+              writer.Write(right[i]);
+          }
+        Buffer = memoryStream.ToArray(); 
+      }
+      */
+      
+
+      /*
       uint [] intArray = new uint[SamplesPerBlock];
       for (int i =0;i< SamplesPerBlock; i++)
         intArray[i] = ((uint)left[i] ) | (((uint)right[i]) << 16);
-      System.Buffer.BlockCopy(intArray, 0, Buffer, 0, Buffer.Length);  
+      System.Buffer.BlockCopy(intArray, 0, Buffer, 0, Buffer.Length);
+
+      for (int i = 0; i < SamplesPerBlock; i++)
+        if (Buffer[i] != bytesTest[i])
+          throw new Exception("Mismatch");
+      Buffer = bytesTest; 
+      */
+
+
+      int t = 0;
+      for (int i = 0; i < SamplesPerBlock; i++)
+      {
+        short leftShort = left[i];
+        short rightShort = right[i];
+        Buffer[t++] = (byte)(leftShort); 
+        Buffer[t++] = (byte)(leftShort >> 8);
+        Buffer[t++] = (byte)(rightShort);
+        Buffer[t++] = (byte)(rightShort >> 8);
+      }
 
       /*
       byte[] debugBuffer = new byte[BufferSize];
@@ -59,15 +92,7 @@ namespace AudioEye
     {
       short[] left = new short[SamplesPerBlock];
       short[] right = new short[SamplesPerBlock];
-      if (snapshot == null)
-      {
-        for (int i = 0; i < SamplesPerBlock; i++)
-        {
-          left[i] = 16380;
-          right[i] = 16380;
-        }
-      }
-      else 
+      if (snapshot != null)
         for (int i =0; i<SamplesPerBlock; i++, time+=FrameDuration)
         {
           left[i] = snapshot.GetShortLeftAmplitude(time, amplifyLeft);
@@ -140,7 +165,8 @@ namespace AudioEye
     {
       if (nextBlockIndex >= blocks.Length)
         return -1;
-      return nextBlockIndex++; 
+      lock (locker)
+        return nextBlockIndex++; 
     }
 
     public double EndTime => startTime + maximumSeconds;
@@ -188,7 +214,7 @@ namespace AudioEye
       BlockCount = maximumSeconds * 100;
       blocks = new Audio10msBlock[BlockCount];
       waveFileHeader = new WaveGenerator(new short[0]).GenerateWaveFileHeader(AudioByteCount);
-      blockDuration = Audio10msBlock.FrameDuration;
+      blockDuration = 0.01;
       blockSize = Audio10msBlock.BufferSize; 
       this.maximumSeconds = maximumSeconds;
       length = AudioByteCount + waveFileHeader.Length;

@@ -247,82 +247,28 @@ namespace AudioEye
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
       //short[] previousSample = null; 
-      int count = 0; 
+      int count = 0;
       while (!Stop)
       {
-        /*
-        short[] sample = ThreadControlCenter.Main.MonoSample;
-        if (sample == previousSample)
-        {
-          System.Threading.Thread.Sleep(1);
-          continue; 
-        }
-        MemoryStream stream = ThreadControlCenter.Main.MonoStream; 
-        if (stream == null)
-          continue; 
-        
-        previousSample = sample;
-        soundPlayer.Stream = stream;
-        soundPlayer.LoadAsync(); 
-        soundPlayer.Play();
-        */
-
-        AudioStream audioStream = new AudioStream(4);
+        AudioStream audioStream = new AudioStream(1);
         ActiveAudioStream = audioStream;
         bool error = false;
-        
-        //Debug(audioStream, count++);
+
         //continue; 
 
         using (SoundPlayer soundPlayer = new SoundPlayer(audioStream))
         {
           try
           {
-            soundPlayer.Play();
+            soundPlayer.PlaySync();
           }
           catch (Exception ex)
           {
-            error = true; 
-            soundPlayer.Stop(); 
+            error = true;
+            soundPlayer.Stop();
           }
         }
-        for (int i = 0; i < 4; i++)
-        {
-          if (error)
-            break; 
-          System.Threading.Thread.Sleep(1000);
-        }
-        /*
-        AudioBlock audioBlock = AudioBlock;
-        short[] stereo = audioBlock.MakeStereo(); 
-
-        WaveGenerator waveGenerator = new WaveGenerator(stereo);
-        waveGenerator.GenerateSoundStream();
-        waveGenerator.Play(); 
-        System.Threading.Thread.Sleep(500);
-        */
       }
-    }
-
-    private void Debug(AudioStream audioStream, int count)
-    {
-      byte[] bytes = audioStream.ToArray();
-      File.WriteAllBytes("D:\\debug_" + count.ToString() + ".wav",bytes);
-      byte[] trimmed = new byte[bytes.Length - 44];
-      Array.Copy(bytes, 44, trimmed, 0, trimmed.Length);
-
-      short[] shorts = new short[trimmed.Length / 2];
-      for (int i =0; i<trimmed.Length/2;i++)
-      {
-        short current = (short)(trimmed[i * 2] + trimmed[i * 2+1]*256);
-        shorts[i] = current; 
-      }
-
-      WaveGenerator waveGenerator = new WaveGenerator(shorts);
-      byte[] bytes2 = waveGenerator.GetBytes();
-      for (int i = 0; i < bytes.Length; i++)
-        if (bytes[i] != bytes2[i])
-          throw new Exception("Wave Error");
     }
 
     private void AudioUpdaterWork(object sender, DoWorkEventArgs e)
