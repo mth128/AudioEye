@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace AudioEye
 {
@@ -121,6 +122,7 @@ namespace AudioEye
 
   /// <summary>
   /// A stream for audio, using a standard wave format, short stereo, 48000 samples per second. 
+  /// Audio is added in blocks of 10ms each, while being read. 
   /// </summary>
   public class AudioStream : Stream
   {
@@ -207,13 +209,16 @@ namespace AudioEye
       get => position; set => throw new Exception("AudioStream not compatible for setting position.");
     }
 
-    public AudioStream(int maximumSeconds = 60)
+    public AudioStream(int maximumSeconds = 60, bool initializeHeader = true)
     {
       int bytesPerSecond = SampleSize * SamplesPerSecond;
       AudioByteCount = bytesPerSecond * maximumSeconds;
       BlockCount = maximumSeconds * 100;
       blocks = new Audio10msBlock[BlockCount];
-      waveFileHeader = new WaveGenerator(new short[0]).GenerateWaveFileHeader(AudioByteCount);
+      if (initializeHeader)
+        waveFileHeader = new WaveGenerator(new short[0]).GenerateWaveFileHeader(AudioByteCount);
+      else
+        waveFileHeader = new byte[0]; 
       blockDuration = 0.01;
       blockSize = Audio10msBlock.BufferSize; 
       this.maximumSeconds = maximumSeconds;
@@ -248,6 +253,7 @@ namespace AudioEye
       }
       else
       {
+        ReadyForWrite = true;
         int readStart = position - waveFileHeader.Length;
         int readEnd = readStart + count;
         int startBlockIndex = readStart / blockSize;
@@ -321,6 +327,27 @@ namespace AudioEye
         position += read; 
       }
       return array; 
+    }
+  }
+
+  public class AudioWaveStream : NAudio.Wave.WaveStream
+  {
+    private AudioStream audioStream; 
+
+    public override WaveFormat WaveFormat => new WaveFormat(48000, 16, 2);
+
+    public override long Length => audioStream.Length; 
+
+    public override long Position { get => audioStream.Position; set => throw new NotImplementedException(); }
+
+    public override int Read(byte[] buffer, int offset, int count)
+    {
+      return audioStream.Read(buffer, offset, count);
+    }
+
+    public AudioWaveStream(AudioStream audioStream)
+    {
+      this.audioStream = audioStream; 
     }
   }
 }

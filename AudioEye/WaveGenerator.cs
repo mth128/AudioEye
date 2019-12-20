@@ -145,9 +145,7 @@ namespace AudioEye
       }
 
       // Calculate data chunk size in bytes
-      data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));
-
-      
+      data.dwChunkSize = (uint)(data.shortArray.Length * (format.wBitsPerSample / 8));      
     }
 
     internal void LooseStream()

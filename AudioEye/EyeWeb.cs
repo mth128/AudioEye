@@ -187,10 +187,6 @@ namespace AudioEye
   {
     public EyeWebCoordinate[] coordinates;
     public PointF[] targetPoints;
-    //public PointF[] sourcePoints;
-    //public int tintLeft = 0;
-    //public int tintMono = 0;
-    //public int tintRight = 0;
     public double tone;
     public SoundWave soundWave;
 
@@ -232,7 +228,7 @@ namespace AudioEye
     public float x;
     public float y;
 
-    public EyeWebCoordinate(double tone, float powerBase = 1.8f, float centerSubstract = 0.5f, bool clockwise = false)
+    public EyeWebCoordinate(double tone, float powerBase = 1.8f, float centerSubstract = 0.5f, bool flipHorizontal = false, bool flipVertical = true)
     {
       double inverse = (octaves * 12) - tone;
       if (inverse < 0)
@@ -245,8 +241,10 @@ namespace AudioEye
       double sigma = (tone) / 6.0 * Math.PI;
       double cos = Math.Cos(sigma);
       double sin = Math.Sin(sigma);
-      if (clockwise)
+      if (flipHorizontal)
         cos = -cos;
+      if (flipVertical)
+        sin = -sin; 
       double length = Math.Pow(powerBase, inverse / 12.0) - centerSubstract;
 
       x = Convert.ToSingle(cos * length);

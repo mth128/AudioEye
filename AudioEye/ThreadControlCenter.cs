@@ -7,6 +7,7 @@ using System.Linq;
 using System.Media;
 using System.Text;
 using System.Threading.Tasks;
+using NAudio.Wave;
 
 namespace AudioEye
 {
@@ -96,7 +97,6 @@ namespace AudioEye
 
     //Booleans
     public bool DrawOriginal { get; set; } = true;
-    public bool AudioOn { get; set; } = true;
 
     //Reference time
     public DateTime StartOfProgram { get; set; } = DateTime.Now;
@@ -105,6 +105,7 @@ namespace AudioEye
     //Audio
     private object audioLock = new object();
     private AudioStream audioStream;
+    private int audioResetTime = 30; 
 
     public AudioStream ActiveAudioStream 
     {
@@ -117,109 +118,10 @@ namespace AudioEye
         lock (audioLock) audioStream = value; 
       }
     }
-    //private short[] leftSample; 
-    //private short[] monoSample;
-    //private short[] rightSample;
-    //private MemoryStream monoStream;
-    //private StereoWaveBuffer[] stereoWaveBuffers = new StereoWaveBuffer[4];
-    //private int readingBufferIndex = -1;
-    //private int readyToPlayBufferIndex = -1; 
-    //private int writingBufferIndex = -1;
-    //private float bufferDuration = 0.1f; 
-      
-      /*
-    //This should only be called by the audio writer. 
-    private StereoWaveBuffer GetWriteBuffer()
-    {
-      lock (audioLock)
-      {
-        readyToPlayBufferIndex = writingBufferIndex;
-        writingBufferIndex = -1;
-        for (int i = 0; i <stereoWaveBuffers.Length;i++)
-        {
-          if (i == readingBufferIndex || i == readyToPlayBufferIndex)
-            continue;
-          writingBufferIndex = i;
-          break; 
-        }
-        if (writingBufferIndex == -1)
-          return null;
-        return stereoWaveBuffers[writingBufferIndex]; 
-      }
-    }
-
-    //This should only be called by the audio reader. 
-    public StereoWaveBuffer GetReadBuffer()
-    {
-      lock (audioLock)
-      {
-        readingBufferIndex = readyToPlayBufferIndex; 
-        if (readyToPlayBufferIndex == -1)
-          return null;
-
-        return stereoWaveBuffers[readingBufferIndex]; 
-      }
-    }*/
 
     public float AmplifyLeft { get; set; } = 1;
     public float AmplifyMono { get; set; } = 1; 
     public float AmplifyRight { get; set; } = 1; 
-
-    /*
-    public short[] LeftSample
-    {
-      get { lock (audioLock) return leftSample; }
-      set { lock (audioLock) leftSample = value; }
-    }
-
-    public short[] MonoSample
-    {
-      get { lock (audioLock) return monoSample; }
-      set { lock (audioLock) monoSample = value; }
-    }
-
-    public short[] RightSample
-    {
-      get { lock (audioLock) return rightSample; }
-      set { lock (audioLock) rightSample = value; }
-    }
-
-    private void InitializeStereoBuffers()
-    {
-      for (int i = 0; i < stereoWaveBuffers.Length; i++)
-        stereoWaveBuffers[i] = WaveGenerator.GenerateDefaultStereoWaveBuffer(bufferDuration);
-    }
-    */
-
-    /*
-    public AudioBlock AudioBlock
-    {
-      get { lock (audioLock) return audioBlock; }
-      set { lock (audioLock) audioBlock = value; }
-    }*/
-
-    //public int BytesPerSecond { get; set; } = 48000;
-    /*
-    public MemoryStream MonoStream
-    {
-      get {
-        lock (audioLock)
-        {
-          MemoryStream memoryStream = monoStream;
-          monoStream = null; 
-          return memoryStream;
-        }
-      }
-      set
-      {
-        lock (audioLock)
-        {
-          if (monoStream != null)
-            monoStream.Dispose();
-          monoStream = value; 
-        }
-      }
-    }*/
 
     //Threads 
     private BackgroundWorker audioPlayer = new BackgroundWorker();
@@ -243,32 +145,65 @@ namespace AudioEye
       imagePainter.RunWorkerAsync();
     }
 
-
-    private void AudioPlayerWork(object sender, DoWorkEventArgs e)
+    private void AudioPlayerWorkSoundPlayer()
     {
-      //short[] previousSample = null; 
-      int count = 0;
+      SoundPlayer soundPlayer = new SoundPlayer();
       while (!Stop)
       {
-        AudioStream audioStream = new AudioStream(1);
-        ActiveAudioStream = audioStream;
-        bool error = false;
-
-        //continue; 
-
-        using (SoundPlayer soundPlayer = new SoundPlayer(audioStream))
+        try
         {
-          try
-          {
-            soundPlayer.PlaySync();
-          }
-          catch (Exception ex)
-          {
-            error = true;
-            soundPlayer.Stop();
-          }
+          AudioStream audioStream = new AudioStream(1);
+          ActiveAudioStream = audioStream;
+          soundPlayer.Stream = audioStream;
+          soundPlayer.PlaySync();
+        }
+        catch
+        {
+          soundPlayer.Stop();
+          soundPlayer.Dispose();
         }
       }
+      if (soundPlayer != null)
+        soundPlayer.Dispose();
+    }
+
+    private void AudioPlayerWorkNAudio()
+    {
+      NAudio.Wave.DirectSoundOut output = new NAudio.Wave.DirectSoundOut();
+      
+      output.PlaybackStopped += ResetAudio;
+
+      AudioStream audioStream= new AudioStream(audioResetTime, false);
+      ActiveAudioStream = audioStream;
+      while (!Stop)
+      {
+        audioStream = ActiveAudioStream;
+        AudioWaveStream audioWaveStream = new AudioWaveStream(audioStream);
+        output.Init(new NAudio.Wave.WaveChannel32(audioWaveStream) { PadWithZeroes = false });
+        try
+        {
+          output.Play(); 
+        }
+        catch
+        {
+          output.Stop();
+        }
+        while (audioStream == ActiveAudioStream)
+        {
+          System.Threading.Thread.Sleep(1);
+        }
+        output.Stop();
+      }
+    }
+    private void ResetAudio(object sender, StoppedEventArgs e)
+    {
+      ActiveAudioStream = new AudioStream(audioResetTime, false); 
+    }
+
+     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
+    {
+      //AudioPlayerWorkSoundPlayer();
+      AudioPlayerWorkNAudio();
     }
 
     private void AudioUpdaterWork(object sender, DoWorkEventArgs e)
@@ -282,7 +217,7 @@ namespace AudioEye
           continue;
         }
         audioStream.StartTime = ThreadControlCenter.Main.SecondsSinceStart + 1;
-        Parallel.For(0, 4, threadIndex =>{
+        Parallel.For(0, 8, threadIndex =>{
             //doing this in multiple threads to speed it up. 
 
             int index = audioStream.GetNextBlockIndex();
@@ -430,7 +365,9 @@ namespace AudioEye
     }
   }
 
-  public enum ThreadID: short
+
+
+    public enum ThreadID: short
   {
     None = 0,
     Root = 1,

@@ -58,7 +58,6 @@
       this.ImageCoordXLabel = new System.Windows.Forms.Label();
       this.ImageCoordYLabel = new System.Windows.Forms.Label();
       this.OriginalBox = new System.Windows.Forms.CheckBox();
-      this.AudioBox = new System.Windows.Forms.CheckBox();
       this.label10 = new System.Windows.Forms.Label();
       this.AmplitudeLeftBox = new System.Windows.Forms.TextBox();
       this.label11 = new System.Windows.Forms.Label();
@@ -384,19 +383,6 @@
       this.OriginalBox.UseVisualStyleBackColor = true;
       this.OriginalBox.CheckedChanged += new System.EventHandler(this.OriginalBox_CheckedChanged);
       // 
-      // AudioBox
-      // 
-      this.AudioBox.AutoSize = true;
-      this.AudioBox.Checked = true;
-      this.AudioBox.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.AudioBox.Location = new System.Drawing.Point(229, 56);
-      this.AudioBox.Name = "AudioBox";
-      this.AudioBox.Size = new System.Drawing.Size(53, 17);
-      this.AudioBox.TabIndex = 34;
-      this.AudioBox.Text = "Audio";
-      this.AudioBox.UseVisualStyleBackColor = true;
-      this.AudioBox.CheckedChanged += new System.EventHandler(this.AudioBox_CheckedChanged);
-      // 
       // label10
       // 
       this.label10.AutoSize = true;
@@ -462,7 +448,6 @@
       this.Controls.Add(this.AmplitudeMonoBox);
       this.Controls.Add(this.label10);
       this.Controls.Add(this.AmplitudeLeftBox);
-      this.Controls.Add(this.AudioBox);
       this.Controls.Add(this.OriginalBox);
       this.Controls.Add(this.ImageCoordYLabel);
       this.Controls.Add(this.ImageCoordXLabel);
@@ -528,7 +513,6 @@
     private System.Windows.Forms.Label label8;
     private System.Windows.Forms.Label label3;
     private System.Windows.Forms.CheckBox OriginalBox;
-    private System.Windows.Forms.CheckBox AudioBox;
     private System.Windows.Forms.Label label10;
     private System.Windows.Forms.TextBox AmplitudeLeftBox;
     private System.Windows.Forms.Label label11;

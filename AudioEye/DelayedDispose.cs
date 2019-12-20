@@ -14,22 +14,22 @@ namespace AudioEye
   {
     IDisposable disposable;
     BackgroundWorker disposer = new BackgroundWorker();
-    int milliseconds; 
+    int milliseconds;
 
     public DelayedDispose(IDisposable disposable, int milliseconds = 1000)
     {
       if (disposable == null)
-        return; 
+        return;
       this.disposable = disposable;
-      this.milliseconds = milliseconds; 
+      this.milliseconds = milliseconds;
       disposer.DoWork += WaitAndDispose;
-      disposer.RunWorkerAsync(); 
+      disposer.RunWorkerAsync();
     }
 
     private void WaitAndDispose(object sender, DoWorkEventArgs e)
     {
       System.Threading.Thread.Sleep(milliseconds);
-      disposable.Dispose(); 
+      disposable.Dispose();
     }
   }
 
@@ -37,7 +37,7 @@ namespace AudioEye
   {
     public static void DisposeDelayed(this IDisposable disposable, int milliseconds = 2000)
     {
-      new DelayedDispose(disposable, milliseconds); 
+      new DelayedDispose(disposable, milliseconds);
     }
   }
 }

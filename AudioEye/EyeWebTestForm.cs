@@ -29,7 +29,8 @@ namespace AudioEye
     public EyeWebTestForm()
     {
       InitializeComponent();
-      UpdateEyeWeb(); 
+      UpdateEyeWeb();
+      LoadImage(); 
     }
 
 
@@ -256,14 +257,14 @@ namespace AudioEye
         testForm.ShowDialog(); 
       
     }
-
-    private void LoadImageButton_Click(object sender, EventArgs e)
+    private void LoadImage()
     {
       using (OpenFileDialog ofd = new OpenFileDialog())
       {
+        ofd.Filter = "Images|*.jpg;*.png";
         if (ofd.ShowDialog() != DialogResult.OK)
           return;
-        Image dispose = ThreadControlCenter.Main.OriginalImage; 
+        Image dispose = ThreadControlCenter.Main.OriginalImage;
         Image newImage = Image.FromFile(ofd.FileName);
         GrayscaleImageData grayscaleImageData = new GrayscaleImageData(newImage);
         StereoImage stereoImage = new StereoImage(grayscaleImageData);
@@ -271,6 +272,10 @@ namespace AudioEye
         ThreadControlCenter.Main.ActiveStereoImage = stereoImage; 
         dispose.DisposeDelayed(); 
       }
+    }
+    private void LoadImageButton_Click(object sender, EventArgs e)
+    {
+      LoadImage(); 
     }
 
     private void UpdateTimer_Tick(object sender, EventArgs e)
@@ -286,10 +291,6 @@ namespace AudioEye
       ThreadControlCenter.Main.DrawOriginal = OriginalBox.Checked;
     }
 
-    private void AudioBox_CheckedChanged(object sender, EventArgs e)
-    {
-      ThreadControlCenter.Main.AudioOn = AudioBox.Checked;
-    }
 
     private void AmplitudeLeftBox_TextChanged(object sender, EventArgs e)
     {
@@ -326,5 +327,6 @@ namespace AudioEye
         ThreadControlCenter.Main.AmplifyRight = 1;
       }
     }
+
   }
 }
