@@ -17,17 +17,25 @@ namespace AudioEye
 
     public byte[] Buffer { get; } = new byte[BufferSize];
 
+    public int Index { get; }
+    public int Start { get; }
+    public int End { get; }
+
     /// <summary>
     /// 
     /// </summary>
     /// <param name="left">480 shorts of audio data for the left ear. (maximum value is 32760)</param>
     /// <param name="right">480 shorts of audio data for the right ear.(maximum value is 32760)</param>
-    public Audio10msBlock(short[] left, short[] right)
+    public Audio10msBlock(int index, short[] left, short[] right)
     {
+      Index = index;
+      Start = Index * BufferSize;
+      End = (Index + 1) * BufferSize;
       uint [] intArray = new uint[SamplesPerBlock];
       for (int i =0;i< SamplesPerBlock; i++)
         intArray[i] = ((uint)left[i] ) | (((uint)right[i]) << 16);
       System.Buffer.BlockCopy(intArray, 0, Buffer, 0, Buffer.Length);  
+
       /*
       byte[] debugBuffer = new byte[BufferSize];
       int t = 0; 
@@ -47,7 +55,7 @@ namespace AudioEye
           */
     }
 
-    public static Audio10msBlock FromSnapshot(Snapshot snapshot, double time, float amplifyLeft, float amplifyRight)
+    public static Audio10msBlock FromSnapshot(Snapshot snapshot, double time, int index, float amplifyLeft, float amplifyRight)
     {
       short[] left = new short[SamplesPerBlock];
       short[] right = new short[SamplesPerBlock];
@@ -66,7 +74,23 @@ namespace AudioEye
           right[i] = snapshot.GetShortRightAmplitude(time, amplifyRight);
         }
 
-      return new Audio10msBlock(left, right);
+      return new Audio10msBlock(index, left, right);
+    }
+
+    internal int Read(byte[] buffer, int targetOffset, int readStart, int count)
+    {
+      if (readStart < Start)
+      {
+        int skip = Start - readStart;
+        count -= skip;
+        readStart = Start; 
+      }
+
+      if (readStart + count > End)
+        count = End - readStart; 
+      
+      Array.Copy(Buffer, readStart - Start, buffer, targetOffset, count);
+      return count; 
     }
   }
 
@@ -85,15 +109,17 @@ namespace AudioEye
     private double startTime = 10000000;
     private int nextBlockIndex;
     private double maximumSeconds;
-    private int position = 0; 
+    private int position = 0;
+    private int length;
+
+    public bool Saturated => nextBlockIndex >= blocks.Length; 
 
     public double StartTime {
       get => startTime;
       set
       {
         if (startTimeSet)
-          return; 
-          //throw new Exception("Cannot set start time twice!");
+          throw new Exception("Cannot set start time twice!");
         startTime = value;
         startTimeSet =true;
         nextBlockIndex = 0; 
@@ -135,7 +161,7 @@ namespace AudioEye
 
     public override bool CanWrite => false;
 
-    public override long Length => AudioByteCount + waveFileHeader.Length; 
+    public override long Length => length;
 
     public int BlockCount { get; }
 
@@ -164,7 +190,8 @@ namespace AudioEye
       waveFileHeader = new WaveGenerator(new short[0]).GenerateWaveFileHeader(AudioByteCount);
       blockDuration = Audio10msBlock.FrameDuration;
       blockSize = Audio10msBlock.BufferSize; 
-      this.maximumSeconds = maximumSeconds; 
+      this.maximumSeconds = maximumSeconds;
+      length = AudioByteCount + waveFileHeader.Length;
     }
 
     public override void Flush()
@@ -174,19 +201,17 @@ namespace AudioEye
 
     public override int Read(byte[] buffer, int targetOffset, int count)
     {
-      int sourceOffset = position; 
-
-      if (sourceOffset < waveFileHeader.Length)
+      if (position < waveFileHeader.Length)
       {
         //read the header. 
-        int end = sourceOffset + count;
+        int end = position + count;
         if (end >= waveFileHeader.Length)
         {
           end = waveFileHeader.Length;
-          count = end - sourceOffset;
+          count = end - position;
         }
 
-        Array.Copy(waveFileHeader, sourceOffset, buffer, targetOffset, count);
+        Array.Copy(waveFileHeader, position, buffer, targetOffset, count);
 
         if (end == waveFileHeader.Length)
           //done reading the header. Ready for writing. 
@@ -197,71 +222,48 @@ namespace AudioEye
       }
       else
       {
-        int writtenCount = 0;
-        sourceOffset -= waveFileHeader.Length;
+        int readStart = position - waveFileHeader.Length;
+        int readEnd = readStart + count;
+        int startBlockIndex = readStart / blockSize;
+        int endBlockIndex = readEnd / blockSize;
+        if (endBlockIndex * blockSize < readEnd)
+          endBlockIndex++;
+        if (endBlockIndex > BlockCount)
+          endBlockIndex = BlockCount;
+        int writtenCount = 0; 
+
         while (position < Length)
-        {
-          //continue with reading blocks. 
-
-          int end = sourceOffset + count;
-
-          int startBlock = sourceOffset / blockSize;
-          int endBlock = end / blockSize;
-          if (endBlock * blockSize < end)
-            endBlock++;
-
-          int blockOffset = startBlock * blockSize;
-
-          if (endBlock > blocks.Length)
-            endBlock = blocks.Length;
-
-          for (int blockIndex = startBlock; blockIndex < endBlock; blockIndex++, blockOffset += blockSize)
+        {          
+          for (int blockIndex = startBlockIndex; blockIndex < endBlockIndex; blockIndex++)
           {
             Audio10msBlock block = blocks[blockIndex];
             if (block == null)
             {
-              if (writtenCount != 0)
-              {
-                position += writtenCount;
+              if (writtenCount!=0) 
+                //end of current stream. 
                 return writtenCount;
-              }
-              else
+              while (block == null)
               {
-                while (block == null)
-                {
-                  System.Threading.Thread.Sleep(1); 
-                  block = blocks[blockIndex];
-                }
+                System.Threading.Thread.Sleep(1);
+                block = blocks[blockIndex];
               }
             }
-            int inBlockOffset = sourceOffset - blockOffset;
-            int readLength = blockSize - inBlockOffset;
 
-            bool deleteBlock = false;
-            if (readLength > count)
-              readLength = count;
-            else
-              deleteBlock = true;
+            int blockRead = block.Read(buffer, targetOffset, readStart, count);
+            count -= blockRead;
+            position += blockRead;
+            writtenCount += blockRead;
+            readStart += blockRead;
+            targetOffset += blockRead;
 
-            Array.Copy(block.Buffer, inBlockOffset, buffer, targetOffset, readLength);
+            if (readEnd >= block.End)
+            //done reading the block. 
+              blocks[blockIndex] = null; 
 
-            //update positions
-            targetOffset += readLength;
-            count -= readLength;
-            sourceOffset += readLength;
-            writtenCount += readLength;
-
-            if (deleteBlock)
-              //block was completely read, so it is no longer needed. 
-              blocks[blockIndex] = null;
-            if (readLength == 0)
-            {
-              position += writtenCount; 
-              return writtenCount;
-            }
+            if (count == 0)
+              return writtenCount; 
           }
         }
-        position += writtenCount; 
         return writtenCount; 
       }
     }
@@ -279,6 +281,20 @@ namespace AudioEye
     public override void Write(byte[] buffer, int offset, int count)
     {
       throw new Exception("AudioStream write not compatible.");
+    }
+
+    public byte[] ToArray()
+    {
+      byte[] array = new byte[Length];
+      int position = 0;
+      int count = length; 
+      while (count>0)
+      {
+        int read = Read(array, position, count);
+        count -= read;
+        position += read; 
+      }
+      return array; 
     }
   }
 }

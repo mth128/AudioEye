@@ -247,6 +247,7 @@ namespace AudioEye
     private void AudioPlayerWork(object sender, DoWorkEventArgs e)
     {
       //short[] previousSample = null; 
+      int count = 0; 
       while (!Stop)
       {
         /*
@@ -268,7 +269,11 @@ namespace AudioEye
 
         AudioStream audioStream = new AudioStream(4);
         ActiveAudioStream = audioStream;
-        bool error = false; 
+        bool error = false;
+        
+        //Debug(audioStream, count++);
+        //continue; 
+
         using (SoundPlayer soundPlayer = new SoundPlayer(audioStream))
         {
           try
@@ -281,7 +286,7 @@ namespace AudioEye
             soundPlayer.Stop(); 
           }
         }
-        for (int i = 0; i < 60; i++)
+        for (int i = 0; i < 4; i++)
         {
           if (error)
             break; 
@@ -299,17 +304,38 @@ namespace AudioEye
       }
     }
 
+    private void Debug(AudioStream audioStream, int count)
+    {
+      byte[] bytes = audioStream.ToArray();
+      File.WriteAllBytes("D:\\debug_" + count.ToString() + ".wav",bytes);
+      byte[] trimmed = new byte[bytes.Length - 44];
+      Array.Copy(bytes, 44, trimmed, 0, trimmed.Length);
+
+      short[] shorts = new short[trimmed.Length / 2];
+      for (int i =0; i<trimmed.Length/2;i++)
+      {
+        short current = (short)(trimmed[i * 2] + trimmed[i * 2+1]*256);
+        shorts[i] = current; 
+      }
+
+      WaveGenerator waveGenerator = new WaveGenerator(shorts);
+      byte[] bytes2 = waveGenerator.GetBytes();
+      for (int i = 0; i < bytes.Length; i++)
+        if (bytes[i] != bytes2[i])
+          throw new Exception("Wave Error");
+    }
+
     private void AudioUpdaterWork(object sender, DoWorkEventArgs e)
     {
       while (!Stop)
       {
         AudioStream audioStream = ThreadControlCenter.Main.ActiveAudioStream;
-        if (ThreadControlCenter.Main.ActiveSnapshot == null || audioStream == null || !audioStream.ReadyForWrite)
+        if (ThreadControlCenter.Main.ActiveSnapshot == null || audioStream == null || !audioStream.ReadyForWrite || audioStream.Saturated)
         {
           System.Threading.Thread.Sleep(1);
           continue;
         }
-        audioStream.StartTime = ThreadControlCenter.Main.SecondsSinceStart +1;
+        audioStream.StartTime = ThreadControlCenter.Main.SecondsSinceStart + 1;
         Parallel.For(0, 4, threadIndex =>{
             //doing this in multiple threads to speed it up. 
 
@@ -321,7 +347,7 @@ namespace AudioEye
                 System.Threading.Thread.Sleep(1);
 
               Snapshot snapshot = ThreadControlCenter.Main.ActiveSnapshot;
-              Audio10msBlock block = Audio10msBlock.FromSnapshot(snapshot, time, ThreadControlCenter.Main.AmplifyLeft, ThreadControlCenter.Main.AmplifyRight);
+              Audio10msBlock block = Audio10msBlock.FromSnapshot(snapshot, time, index, ThreadControlCenter.Main.AmplifyLeft, ThreadControlCenter.Main.AmplifyRight);
 
               audioStream.SetBlock(index, block);
               index = audioStream.GetNextBlockIndex();

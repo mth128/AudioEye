@@ -208,6 +208,12 @@ namespace AudioEye
       fileStream.Close();
     }
 
+    public byte[] GetBytes()
+    {
+      using (MemoryStream stream = GenerateSoundStream())
+        return stream.ToArray(); 
+    }
+
     public MemoryStream GenerateSoundStream()
     {
       if (soundStream != null)
@@ -275,7 +281,7 @@ namespace AudioEye
 
       // Write the data chunk
       writer.Write(data.sChunkID.ToCharArray());
-      writer.Write(data.dwChunkSize);
+      writer.Write(soundByteCount);
 
       writer.Seek(4, SeekOrigin.Begin);
       uint filesize = (uint)(writer.BaseStream.Length + soundByteCount);
