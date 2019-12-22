@@ -51,7 +51,6 @@
       this.CoordYLabel = new System.Windows.Forms.Label();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.LoadImageButton = new System.Windows.Forms.ToolStripButton();
-      this.OpenTestFormButton = new System.Windows.Forms.ToolStripButton();
       this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
@@ -64,6 +63,8 @@
       this.AmplitudeMonoBox = new System.Windows.Forms.TextBox();
       this.label12 = new System.Windows.Forms.Label();
       this.AmplitudeRightBox = new System.Windows.Forms.TextBox();
+      this.groupBox1 = new System.Windows.Forms.GroupBox();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -74,6 +75,8 @@
       ((System.ComponentModel.ISupportInitialize)(this.RightBox)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).BeginInit();
       this.toolStrip1.SuspendLayout();
+      this.groupBox1.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // splitContainer1
@@ -81,7 +84,7 @@
       this.splitContainer1.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.splitContainer1.Location = new System.Drawing.Point(15, 108);
+      this.splitContainer1.Location = new System.Drawing.Point(15, 93);
       this.splitContainer1.Name = "splitContainer1";
       this.splitContainer1.Orientation = System.Windows.Forms.Orientation.Horizontal;
       // 
@@ -92,8 +95,8 @@
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
-      this.splitContainer1.Size = new System.Drawing.Size(959, 435);
-      this.splitContainer1.SplitterDistance = 229;
+      this.splitContainer1.Size = new System.Drawing.Size(959, 450);
+      this.splitContainer1.SplitterDistance = 236;
       this.splitContainer1.TabIndex = 8;
       // 
       // ImageBox
@@ -103,7 +106,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.ImageBox.Location = new System.Drawing.Point(3, 3);
       this.ImageBox.Name = "ImageBox";
-      this.ImageBox.Size = new System.Drawing.Size(953, 223);
+      this.ImageBox.Size = new System.Drawing.Size(953, 230);
       this.ImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.ImageBox.TabIndex = 0;
       this.ImageBox.TabStop = false;
@@ -132,7 +135,7 @@
       this.tableLayoutPanel1.RowCount = 2;
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(953, 200);
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(953, 208);
       this.tableLayoutPanel1.TabIndex = 2;
       // 
       // label9
@@ -166,7 +169,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.MonoBox.Location = new System.Drawing.Point(320, 23);
       this.MonoBox.Name = "MonoBox";
-      this.MonoBox.Size = new System.Drawing.Size(311, 174);
+      this.MonoBox.Size = new System.Drawing.Size(311, 182);
       this.MonoBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.MonoBox.TabIndex = 1;
       this.MonoBox.TabStop = false;
@@ -178,7 +181,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.RightBox.Location = new System.Drawing.Point(637, 23);
       this.RightBox.Name = "RightBox";
-      this.RightBox.Size = new System.Drawing.Size(313, 174);
+      this.RightBox.Size = new System.Drawing.Size(313, 182);
       this.RightBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.RightBox.TabIndex = 3;
       this.RightBox.TabStop = false;
@@ -190,7 +193,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.LeftBox.Location = new System.Drawing.Point(3, 23);
       this.LeftBox.Name = "LeftBox";
-      this.LeftBox.Size = new System.Drawing.Size(311, 174);
+      this.LeftBox.Size = new System.Drawing.Size(311, 182);
       this.LeftBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.LeftBox.TabIndex = 2;
       this.LeftBox.TabStop = false;
@@ -209,17 +212,17 @@
       // 
       // SubsectionsPerToneBox
       // 
-      this.SubsectionsPerToneBox.Location = new System.Drawing.Point(438, 27);
+      this.SubsectionsPerToneBox.Location = new System.Drawing.Point(124, 16);
       this.SubsectionsPerToneBox.Name = "SubsectionsPerToneBox";
-      this.SubsectionsPerToneBox.Size = new System.Drawing.Size(100, 20);
+      this.SubsectionsPerToneBox.Size = new System.Drawing.Size(52, 20);
       this.SubsectionsPerToneBox.TabIndex = 11;
-      this.SubsectionsPerToneBox.Text = "8";
+      this.SubsectionsPerToneBox.Text = "4";
       this.SubsectionsPerToneBox.TextChanged += new System.EventHandler(this.SubsectionsPerToneBox_TextChanged);
       // 
       // label4
       // 
       this.label4.AutoSize = true;
-      this.label4.Location = new System.Drawing.Point(307, 30);
+      this.label4.Location = new System.Drawing.Point(6, 19);
       this.label4.Name = "label4";
       this.label4.Size = new System.Drawing.Size(112, 13);
       this.label4.TabIndex = 10;
@@ -227,9 +230,9 @@
       // 
       // PowerBaseBox
       // 
-      this.PowerBaseBox.Location = new System.Drawing.Point(438, 53);
+      this.PowerBaseBox.Location = new System.Drawing.Point(124, 42);
       this.PowerBaseBox.Name = "PowerBaseBox";
-      this.PowerBaseBox.Size = new System.Drawing.Size(100, 20);
+      this.PowerBaseBox.Size = new System.Drawing.Size(52, 20);
       this.PowerBaseBox.TabIndex = 13;
       this.PowerBaseBox.Text = "1.5";
       this.PowerBaseBox.TextChanged += new System.EventHandler(this.PowerBaseBox_TextChanged);
@@ -237,7 +240,7 @@
       // label5
       // 
       this.label5.AutoSize = true;
-      this.label5.Location = new System.Drawing.Point(307, 56);
+      this.label5.Location = new System.Drawing.Point(6, 45);
       this.label5.Name = "label5";
       this.label5.Size = new System.Drawing.Size(64, 13);
       this.label5.TabIndex = 12;
@@ -245,9 +248,9 @@
       // 
       // CenterSubstractBox
       // 
-      this.CenterSubstractBox.Location = new System.Drawing.Point(438, 79);
+      this.CenterSubstractBox.Location = new System.Drawing.Point(274, 16);
       this.CenterSubstractBox.Name = "CenterSubstractBox";
-      this.CenterSubstractBox.Size = new System.Drawing.Size(100, 20);
+      this.CenterSubstractBox.Size = new System.Drawing.Size(52, 20);
       this.CenterSubstractBox.TabIndex = 15;
       this.CenterSubstractBox.Text = "0.4";
       this.CenterSubstractBox.TextChanged += new System.EventHandler(this.CenterSubstractBox_TextChanged);
@@ -255,7 +258,7 @@
       // label6
       // 
       this.label6.AutoSize = true;
-      this.label6.Location = new System.Drawing.Point(307, 82);
+      this.label6.Location = new System.Drawing.Point(182, 19);
       this.label6.Name = "label6";
       this.label6.Size = new System.Drawing.Size(86, 13);
       this.label6.TabIndex = 14;
@@ -263,9 +266,9 @@
       // 
       // ResolutionBox
       // 
-      this.ResolutionBox.Location = new System.Drawing.Point(641, 30);
+      this.ResolutionBox.Location = new System.Drawing.Point(274, 45);
       this.ResolutionBox.Name = "ResolutionBox";
-      this.ResolutionBox.Size = new System.Drawing.Size(100, 20);
+      this.ResolutionBox.Size = new System.Drawing.Size(52, 20);
       this.ResolutionBox.TabIndex = 16;
       this.ResolutionBox.Text = "512";
       this.ResolutionBox.TextChanged += new System.EventHandler(this.ResolutionBox_TextChanged);
@@ -273,7 +276,7 @@
       // label7
       // 
       this.label7.AutoSize = true;
-      this.label7.Location = new System.Drawing.Point(566, 33);
+      this.label7.Location = new System.Drawing.Point(182, 48);
       this.label7.Name = "label7";
       this.label7.Size = new System.Drawing.Size(57, 13);
       this.label7.TabIndex = 17;
@@ -300,8 +303,7 @@
       // toolStrip1
       // 
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.LoadImageButton,
-            this.OpenTestFormButton});
+            this.LoadImageButton});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.Size = new System.Drawing.Size(986, 25);
@@ -317,16 +319,6 @@
       this.LoadImageButton.Size = new System.Drawing.Size(23, 22);
       this.LoadImageButton.Text = "Load Image";
       this.LoadImageButton.Click += new System.EventHandler(this.LoadImageButton_Click);
-      // 
-      // OpenTestFormButton
-      // 
-      this.OpenTestFormButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.OpenTestFormButton.Image = ((System.Drawing.Image)(resources.GetObject("OpenTestFormButton.Image")));
-      this.OpenTestFormButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.OpenTestFormButton.Name = "OpenTestFormButton";
-      this.OpenTestFormButton.Size = new System.Drawing.Size(23, 22);
-      this.OpenTestFormButton.ToolTipText = "Open Test Form";
-      this.OpenTestFormButton.Click += new System.EventHandler(this.OpenTestForm_Click);
       // 
       // UpdateTimer
       // 
@@ -346,7 +338,7 @@
       // label2
       // 
       this.label2.AutoSize = true;
-      this.label2.Location = new System.Drawing.Point(0, 53);
+      this.label2.Location = new System.Drawing.Point(0, 40);
       this.label2.Name = "label2";
       this.label2.Size = new System.Drawing.Size(98, 13);
       this.label2.TabIndex = 30;
@@ -355,7 +347,7 @@
       // ImageCoordXLabel
       // 
       this.ImageCoordXLabel.AutoSize = true;
-      this.ImageCoordXLabel.Location = new System.Drawing.Point(129, 56);
+      this.ImageCoordXLabel.Location = new System.Drawing.Point(129, 43);
       this.ImageCoordXLabel.Name = "ImageCoordXLabel";
       this.ImageCoordXLabel.Size = new System.Drawing.Size(13, 13);
       this.ImageCoordXLabel.TabIndex = 31;
@@ -364,7 +356,7 @@
       // ImageCoordYLabel
       // 
       this.ImageCoordYLabel.AutoSize = true;
-      this.ImageCoordYLabel.Location = new System.Drawing.Point(186, 56);
+      this.ImageCoordYLabel.Location = new System.Drawing.Point(186, 43);
       this.ImageCoordYLabel.Name = "ImageCoordYLabel";
       this.ImageCoordYLabel.Size = new System.Drawing.Size(13, 13);
       this.ImageCoordYLabel.TabIndex = 32;
@@ -375,28 +367,28 @@
       this.OriginalBox.AutoSize = true;
       this.OriginalBox.Checked = true;
       this.OriginalBox.CheckState = System.Windows.Forms.CheckState.Checked;
-      this.OriginalBox.Location = new System.Drawing.Point(229, 29);
+      this.OriginalBox.Location = new System.Drawing.Point(3, 60);
       this.OriginalBox.Name = "OriginalBox";
-      this.OriginalBox.Size = new System.Drawing.Size(61, 17);
+      this.OriginalBox.Size = new System.Drawing.Size(91, 17);
       this.OriginalBox.TabIndex = 33;
-      this.OriginalBox.Text = "Original";
+      this.OriginalBox.Text = "Show Original";
       this.OriginalBox.UseVisualStyleBackColor = true;
       this.OriginalBox.CheckedChanged += new System.EventHandler(this.OriginalBox_CheckedChanged);
       // 
       // label10
       // 
       this.label10.AutoSize = true;
-      this.label10.Location = new System.Drawing.Point(776, 34);
+      this.label10.Location = new System.Drawing.Point(6, 20);
       this.label10.Name = "label10";
-      this.label10.Size = new System.Drawing.Size(77, 13);
+      this.label10.Size = new System.Drawing.Size(28, 13);
       this.label10.TabIndex = 36;
-      this.label10.Text = "Amplitude Left:";
+      this.label10.Text = "Left:";
       // 
       // AmplitudeLeftBox
       // 
-      this.AmplitudeLeftBox.Location = new System.Drawing.Point(868, 30);
+      this.AmplitudeLeftBox.Location = new System.Drawing.Point(40, 17);
       this.AmplitudeLeftBox.Name = "AmplitudeLeftBox";
-      this.AmplitudeLeftBox.Size = new System.Drawing.Size(100, 20);
+      this.AmplitudeLeftBox.Size = new System.Drawing.Size(46, 20);
       this.AmplitudeLeftBox.TabIndex = 35;
       this.AmplitudeLeftBox.Text = "1";
       this.AmplitudeLeftBox.TextChanged += new System.EventHandler(this.AmplitudeLeftBox_TextChanged);
@@ -404,17 +396,17 @@
       // label11
       // 
       this.label11.AutoSize = true;
-      this.label11.Location = new System.Drawing.Point(776, 60);
+      this.label11.Location = new System.Drawing.Point(92, 20);
       this.label11.Name = "label11";
-      this.label11.Size = new System.Drawing.Size(86, 13);
+      this.label11.Size = new System.Drawing.Size(37, 13);
       this.label11.TabIndex = 38;
-      this.label11.Text = "Amplitude Mono:";
+      this.label11.Text = "Mono:";
       // 
       // AmplitudeMonoBox
       // 
-      this.AmplitudeMonoBox.Location = new System.Drawing.Point(868, 56);
+      this.AmplitudeMonoBox.Location = new System.Drawing.Point(135, 16);
       this.AmplitudeMonoBox.Name = "AmplitudeMonoBox";
-      this.AmplitudeMonoBox.Size = new System.Drawing.Size(100, 20);
+      this.AmplitudeMonoBox.Size = new System.Drawing.Size(46, 20);
       this.AmplitudeMonoBox.TabIndex = 37;
       this.AmplitudeMonoBox.Text = "1";
       this.AmplitudeMonoBox.TextChanged += new System.EventHandler(this.AmplitudeMonoBox_TextChanged);
@@ -422,32 +414,60 @@
       // label12
       // 
       this.label12.AutoSize = true;
-      this.label12.Location = new System.Drawing.Point(776, 86);
+      this.label12.Location = new System.Drawing.Point(190, 20);
       this.label12.Name = "label12";
-      this.label12.Size = new System.Drawing.Size(84, 13);
+      this.label12.Size = new System.Drawing.Size(35, 13);
       this.label12.TabIndex = 40;
-      this.label12.Text = "Amplitude Right:";
+      this.label12.Text = "Right:";
       // 
       // AmplitudeRightBox
       // 
-      this.AmplitudeRightBox.Location = new System.Drawing.Point(868, 82);
+      this.AmplitudeRightBox.Location = new System.Drawing.Point(231, 16);
       this.AmplitudeRightBox.Name = "AmplitudeRightBox";
-      this.AmplitudeRightBox.Size = new System.Drawing.Size(100, 20);
+      this.AmplitudeRightBox.Size = new System.Drawing.Size(46, 20);
       this.AmplitudeRightBox.TabIndex = 39;
       this.AmplitudeRightBox.Text = "1";
       this.AmplitudeRightBox.TextChanged += new System.EventHandler(this.AmplitudeRightBox_TextChanged);
+      // 
+      // groupBox1
+      // 
+      this.groupBox1.Controls.Add(this.label4);
+      this.groupBox1.Controls.Add(this.SubsectionsPerToneBox);
+      this.groupBox1.Controls.Add(this.label5);
+      this.groupBox1.Controls.Add(this.PowerBaseBox);
+      this.groupBox1.Controls.Add(this.label6);
+      this.groupBox1.Controls.Add(this.CenterSubstractBox);
+      this.groupBox1.Controls.Add(this.label7);
+      this.groupBox1.Controls.Add(this.ResolutionBox);
+      this.groupBox1.Location = new System.Drawing.Point(205, 22);
+      this.groupBox1.Name = "groupBox1";
+      this.groupBox1.Size = new System.Drawing.Size(349, 68);
+      this.groupBox1.TabIndex = 41;
+      this.groupBox1.TabStop = false;
+      this.groupBox1.Text = "EyeWeb Settings";
+      // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.label10);
+      this.groupBox2.Controls.Add(this.AmplitudeLeftBox);
+      this.groupBox2.Controls.Add(this.label12);
+      this.groupBox2.Controls.Add(this.AmplitudeRightBox);
+      this.groupBox2.Controls.Add(this.label11);
+      this.groupBox2.Controls.Add(this.AmplitudeMonoBox);
+      this.groupBox2.Location = new System.Drawing.Point(560, 28);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(320, 46);
+      this.groupBox2.TabIndex = 42;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Sound Amplitude Settings";
       // 
       // EyeWebTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(986, 555);
-      this.Controls.Add(this.label12);
-      this.Controls.Add(this.AmplitudeRightBox);
-      this.Controls.Add(this.label11);
-      this.Controls.Add(this.AmplitudeMonoBox);
-      this.Controls.Add(this.label10);
-      this.Controls.Add(this.AmplitudeLeftBox);
+      this.Controls.Add(this.groupBox2);
+      this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.OriginalBox);
       this.Controls.Add(this.ImageCoordYLabel);
       this.Controls.Add(this.ImageCoordXLabel);
@@ -456,14 +476,6 @@
       this.Controls.Add(this.toolStrip1);
       this.Controls.Add(this.CoordYLabel);
       this.Controls.Add(this.CoordXLabel);
-      this.Controls.Add(this.label7);
-      this.Controls.Add(this.ResolutionBox);
-      this.Controls.Add(this.CenterSubstractBox);
-      this.Controls.Add(this.label6);
-      this.Controls.Add(this.PowerBaseBox);
-      this.Controls.Add(this.label5);
-      this.Controls.Add(this.SubsectionsPerToneBox);
-      this.Controls.Add(this.label4);
       this.Controls.Add(this.splitContainer1);
       this.Name = "EyeWebTestForm";
       this.Text = "Audio Eye";
@@ -479,6 +491,10 @@
       ((System.ComponentModel.ISupportInitialize)(this.LeftBox)).EndInit();
       this.toolStrip1.ResumeLayout(false);
       this.toolStrip1.PerformLayout();
+      this.groupBox1.ResumeLayout(false);
+      this.groupBox1.PerformLayout();
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -502,7 +518,6 @@
     private System.Windows.Forms.PictureBox LeftBox;
     private System.Windows.Forms.PictureBox RightBox;
     private System.Windows.Forms.ToolStrip toolStrip1;
-    private System.Windows.Forms.ToolStripButton OpenTestFormButton;
     private System.Windows.Forms.ToolStripButton LoadImageButton;
     private System.Windows.Forms.Timer UpdateTimer;
     private System.Windows.Forms.Label label1;
@@ -519,6 +534,8 @@
     private System.Windows.Forms.TextBox AmplitudeMonoBox;
     private System.Windows.Forms.Label label12;
     private System.Windows.Forms.TextBox AmplitudeRightBox;
+    private System.Windows.Forms.GroupBox groupBox1;
+    private System.Windows.Forms.GroupBox groupBox2;
   }
 }
 

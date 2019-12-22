@@ -50,12 +50,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AudioStream.cs" />
-    <Compile Include="Controls\TextBoxTrackBar.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\TextBoxTrackBar.designer.cs">
-      <DependentUpon>TextBoxTrackBar.cs</DependentUpon>
-    </Compile>
     <Compile Include="DelayedDispose.cs" />
     <Compile Include="EyeWeb.cs" />
     <Compile Include="EyeWebTestForm.cs">
@@ -72,18 +66,15 @@
     <Compile Include="SoundWave.cs" />
     <Compile Include="StereoImage.cs" />
     <Compile Include="StereoWaveBuffer.cs" />
-    <Compile Include="TestForm.cs">
+    <Compile Include="Old\TestForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="TestForm.Designer.cs">
+    <Compile Include="Old\TestForm.Designer.cs">
       <DependentUpon>TestForm.cs</DependentUpon>
     </Compile>
     <Compile Include="ThreadControlCenter.cs" />
     <Compile Include="Old\SingleTone.cs" />
     <Compile Include="WaveGenerator.cs" />
-    <EmbeddedResource Include="Controls\TextBoxTrackBar.resx">
-      <DependentUpon>TextBoxTrackBar.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="EyeWebTestForm.resx">
       <DependentUpon>EyeWebTestForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -96,7 +87,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="TestForm.resx">
+    <EmbeddedResource Include="Old\TestForm.resx">
       <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="Files\Audio Eye.xlsx" />
@@ -118,6 +109,7 @@
   <ItemGroup>
     <Content Include="Files\download.jpg" />
     <Content Include="Files\openfile.png" />
+    <Content Include="Readme.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

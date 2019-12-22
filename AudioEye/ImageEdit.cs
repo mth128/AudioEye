@@ -1,4 +1,6 @@
-﻿using System;
+﻿//Copyright (C) Maarten 't Hart 22 december 2019
+//GNU License 3 applies for this software. See readme.txt
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
