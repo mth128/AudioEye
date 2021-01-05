@@ -30,7 +30,9 @@
     {
       this.components = new System.ComponentModel.Container();
       this.comboBox1 = new System.Windows.Forms.ComboBox();
+      this.bindingSourceVideoSources = new System.Windows.Forms.BindingSource(this.components);
       this.CbVideoResolution = new System.Windows.Forms.ComboBox();
+      this.bindingSourceResolutions = new System.Windows.Forms.BindingSource(this.components);
       this.BtnConnect = new System.Windows.Forms.Button();
       this.BtnDisconnect = new System.Windows.Forms.Button();
       this.BtnSnapshot = new System.Windows.Forms.Button();
@@ -41,8 +43,8 @@
       this.splitContainer1 = new System.Windows.Forms.SplitContainer();
       this.splitContainer2 = new System.Windows.Forms.SplitContainer();
       this.PbCamImage = new System.Windows.Forms.PictureBox();
-      this.bindingSourceVideoSources = new System.Windows.Forms.BindingSource(this.components);
-      this.bindingSourceResolutions = new System.Windows.Forms.BindingSource(this.components);
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
@@ -53,8 +55,6 @@
       this.splitContainer2.Panel2.SuspendLayout();
       this.splitContainer2.SuspendLayout();
       ((System.ComponentModel.ISupportInitialize)(this.PbCamImage)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).BeginInit();
       this.SuspendLayout();
       // 
       // comboBox1
@@ -202,6 +202,8 @@
       this.Controls.Add(this.splitContainer1);
       this.Name = "WebcamCaptureForm";
       this.Text = "Form1";
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel1.PerformLayout();
@@ -213,8 +215,6 @@
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer2)).EndInit();
       this.splitContainer2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.PbCamImage)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).EndInit();
       this.ResumeLayout(false);
 
     }

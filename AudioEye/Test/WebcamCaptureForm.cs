@@ -127,5 +127,7 @@ namespace WebcamCapturer.Controls.WinForms
     {
       DeviceSelected?.Invoke(this, (string)comboBox1.SelectedItem);
     }
+
+
   }
 }

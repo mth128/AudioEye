@@ -29,11 +29,16 @@ namespace AudioEye
 
     //private byte[] imageIntensityBytes; 
 
+    private Image snapShotImage = new Bitmap(640,480); 
+
     public EyeWebTestForm()
     {
       InitializeComponent();
       UpdateEyeWeb();
-      LoadImage();
+      if (!LoadImage())
+      {
+        SetImage(new Bitmap(640, 480));
+      }
 
       //webcam stuff. 
       VideoDevicesBox.SelectedIndexChanged += OnDevicesComboBoxSelectedIndexChanged;
@@ -266,20 +271,28 @@ namespace AudioEye
         testForm.ShowDialog(); 
       
     }
-    private void LoadImage()
+
+    private void SetImage(Image newImage)
+    {
+
+      Image dispose = ThreadControlCenter.Main.OriginalImage;
+
+      GrayscaleImageData grayscaleImageData = new GrayscaleImageData(newImage);
+      StereoImage stereoImage = new StereoImage(grayscaleImageData);
+      ThreadControlCenter.Main.OriginalImage = newImage;
+      ThreadControlCenter.Main.ActiveStereoImage = stereoImage;
+      dispose.DisposeDelayed();
+    }
+
+    private bool LoadImage()
     {
       using (OpenFileDialog ofd = new OpenFileDialog())
       {
         ofd.Filter = "Images|*.jpg;*.png";
-        if (ofd.ShowDialog() != DialogResult.OK)
-          return;
-        Image dispose = ThreadControlCenter.Main.OriginalImage;
-        Image newImage = Image.FromFile(ofd.FileName);
-        GrayscaleImageData grayscaleImageData = new GrayscaleImageData(newImage);
-        StereoImage stereoImage = new StereoImage(grayscaleImageData);
-        ThreadControlCenter.Main.OriginalImage = newImage;
-        ThreadControlCenter.Main.ActiveStereoImage = stereoImage; 
-        dispose.DisposeDelayed(); 
+        if (ofd.ShowDialog() != DialogResult.OK) 
+          return false;
+        SetImage(Image.FromFile(ofd.FileName));
+        return true; 
       }
     }
     private void LoadImageButton_Click(object sender, EventArgs e)
@@ -289,6 +302,12 @@ namespace AudioEye
 
     private void UpdateTimer_Tick(object sender, EventArgs e)
     {
+      if (CamImagePictureBox.Image != null)
+      {
+        Image newImage = (Image)CamImagePictureBox.Image.Clone();
+        SetImage(newImage);
+      }
+
       ImageBox.Image = ThreadControlCenter.Main.EditedOriginal;
       LeftBox.Image = ThreadControlCenter.Main.OutputBitmapLeft;
       RightBox.Image = ThreadControlCenter.Main.OutputBitmapRight;
@@ -366,7 +385,17 @@ namespace AudioEye
     }
 
     public string SelectedVideoDevice { get; set; }
-    public Image SnapShotImage { get ; set ; }
+    public Image SnapShotImage { 
+      get =>snapShotImage;
+      set
+      {
+        Image disposable = snapShotImage; 
+        snapShotImage = value;
+        ThreadControlCenter.Main.OriginalImage = snapShotImage;
+        disposable?.Dispose(); 
+      }
+    
+    }
     public BindingList<string> SupportedFrameSizes
     {
       get => supportedFrameSizes;
@@ -445,7 +474,7 @@ namespace AudioEye
         if (VideoResolutionBox.Text == null || VideoResolutionBox.Text == "")
         {
           DeviceSelected?.Invoke(this, (string)VideoDevicesBox.SelectedItem);
-          VideoResolutionBox.SelectedItem = "320 x 240";
+          VideoResolutionBox.SelectedItem = "640 x 480";
         }
       }
       catch
@@ -472,6 +501,16 @@ namespace AudioEye
       {
 
       }
+    }
+
+    private void TestSnapShotButton_Click(object sender, EventArgs e)
+    {
+      //SnapShot?.Invoke(this, EventArgs.Empty);
+      //Image newImage = (Image) SnapShotImage.Clone();
+      if (CamImagePictureBox.Image == null)
+        return; 
+      Image newImage = (Image) CamImagePictureBox.Image.Clone(); 
+      SetImage(newImage);  
     }
 
 

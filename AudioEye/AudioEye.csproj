@@ -137,6 +137,9 @@
     <EmbeddedResource Include="Old\TestForm.resx">
       <DependentUpon>TestForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Test\WebcamCaptureForm.resx">
+      <DependentUpon>WebcamCaptureForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="VideoForm.resx">
       <DependentUpon>VideoForm.cs</DependentUpon>
     </EmbeddedResource>
