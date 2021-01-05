@@ -157,6 +157,7 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Files\Cam.png" />
     <Content Include="Files\download.jpg" />
     <Content Include="Files\openfile.png" />
     <Content Include="Readme.txt" />

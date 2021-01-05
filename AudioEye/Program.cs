@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WebcamCapturer.Core;
 
 namespace AudioEye
 {
@@ -18,7 +19,9 @@ namespace AudioEye
     {
       Application.EnableVisualStyles();
       Application.SetCompatibleTextRenderingDefault(false);
-      Application.Run(new EyeWebTestForm());
+      EyeWebTestForm startForm = new EyeWebTestForm();
+      var presenter = new WebcamCapturePresenter(startForm);
+      Application.Run(startForm);
     }
   }
 }

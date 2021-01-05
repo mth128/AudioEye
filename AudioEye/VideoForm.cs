@@ -18,7 +18,7 @@ namespace AudioEye
     private BindingList<string> supportedFrameSizes = new BindingList<string>();
 
     private BindingList<string> videoDevices = new BindingList<string>();
-
+    private bool initialized = false; 
     public Image ActualCamImage 
     { 
       get => CamImagePictureBox.Image; 
@@ -124,7 +124,40 @@ namespace AudioEye
 
     private void ConnectButton_Click(object sender, EventArgs e)
     {
+      try
+      {
+        if (VideoDevicesBox.SelectedIndex <0)
+          VideoDevicesBox.SelectedIndex = 0;
+        if (VideoResolutionBox.Text == null || VideoResolutionBox.Text == "")
+        {
+          DeviceSelected?.Invoke(this, (string)VideoDevicesBox.SelectedItem);
+          VideoResolutionBox.SelectedItem = "320 x 240";
+        }
+      }
+      catch
+      {
+
+      }
       Connect.Invoke(sender,e); 
+    }
+
+
+
+    private void VideoDevicesBox_TextChanged(object sender, EventArgs e)
+    {
+      if (initialized)
+        return;
+      initialized = true; 
+      try
+      {
+        VideoDevicesBox.SelectedIndex = 0;
+        VideoResolutionBox.SelectedIndex = 0;
+        Connect.Invoke(sender, e);
+      }
+      catch
+      {
+
+      } 
     }
   }
 }

@@ -14,7 +14,7 @@ using WebcamCapturer.Core;
 
 namespace AudioEye
 {
-  public partial class EyeWebTestForm : Form
+  public partial class EyeWebTestForm : Form, IWebcamCaptureView
   {
     //private Bitmap loadedImage;
     private int resolution = 512;
@@ -33,7 +33,13 @@ namespace AudioEye
     {
       InitializeComponent();
       UpdateEyeWeb();
-      LoadImage(); 
+      LoadImage();
+
+      //webcam stuff. 
+      VideoDevicesBox.SelectedIndexChanged += OnDevicesComboBoxSelectedIndexChanged;
+      VideoResolutionBox.SelectedIndexChanged += OnResolutionsComboBoxSelectedIndexChanged;
+      bindingSourceResolutions.DataSource = SupportedFrameSizes;
+      bindingSourceVideoSources.DataSource = VideoDevices;
     }
 
 
@@ -344,5 +350,134 @@ namespace AudioEye
         MessageBox.Show(ex.Message, "Error");
       }
     }
+
+
+    //webcam capabilities
+    //https://github.com/rgomez90/WebcamCapturer.Controls/blob/master/WebcamCapturer.Controls.WinForms/WebcamCaptureForm.cs
+    private BindingList<string> supportedFrameSizes = new BindingList<string>();
+
+    private BindingList<string> videoDevices = new BindingList<string>();
+    private bool initialized = false;
+
+    public Image ActualCamImage
+    {
+      get => CamImagePictureBox.Image;
+      set => CamImagePictureBox.Image = value;
+    }
+
+    public string SelectedVideoDevice { get; set; }
+    public Image SnapShotImage { get ; set ; }
+    public BindingList<string> SupportedFrameSizes
+    {
+      get => supportedFrameSizes;
+      set
+      {
+        supportedFrameSizes = value;
+        VideoResolutionBox.Items.Clear();
+        foreach (var supportedFrameSize in supportedFrameSizes)
+        {
+          VideoResolutionBox.Items.Add(supportedFrameSize);
+        }
+      }
+    }
+
+
+    public BindingList<string> VideoDevices
+    {
+      get => videoDevices;
+      set
+      {
+        videoDevices = value;
+        VideoDevicesBox.Items.Clear();
+        foreach (var videoDevice in videoDevices)
+        {
+          VideoDevicesBox.Items.Add(videoDevice);
+        }
+      }
+    }
+
+    public event EventHandler Connect;
+
+    public event EventHandler<string> DeviceSelected;
+
+    public event EventHandler Disconnect;
+
+    public event EventHandler<string> ResolutionSelected;
+
+    public event EventHandler SaveSnapShot;
+
+    public event EventHandler SnapShot;
+
+    public void EnableConnectionControls(bool enable)
+    {
+      VideoDevicesBox.Enabled = enable;
+      VideoResolutionBox.Enabled = enable;
+    }
+
+    string IWebcamCaptureView.GetExportPath()
+    {
+      throw new NotImplementedException();
+    }
+
+    public void Message(string message)
+    {
+      MessageBox.Show(message);
+    }
+
+    private void OnResolutionsComboBoxSelectedIndexChanged(object sender, EventArgs e)
+    {
+      if (VideoResolutionBox.SelectedItem == null)
+        return;
+      ResolutionSelected?.Invoke(this, (string)VideoResolutionBox.SelectedItem);
+    }
+
+    private void OnDevicesComboBoxSelectedIndexChanged(object sender, EventArgs e)
+    {
+      DeviceSelected?.Invoke(this, (string)VideoDevicesBox.SelectedItem);
+    }
+
+    private void ConnectButton_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        if (VideoDevicesBox.SelectedIndex < 0)
+          VideoDevicesBox.SelectedIndex = 0;
+        if (VideoResolutionBox.Text == null || VideoResolutionBox.Text == "")
+        {
+          DeviceSelected?.Invoke(this, (string)VideoDevicesBox.SelectedItem);
+          VideoResolutionBox.SelectedItem = "320 x 240";
+        }
+      }
+      catch
+      {
+
+      }
+      Connect.Invoke(sender, e);
+    }
+
+
+
+    private void VideoDevicesBox_TextChanged(object sender, EventArgs e)
+    {
+      if (initialized)
+        return;
+      initialized = true;
+      try
+      {
+        VideoDevicesBox.SelectedIndex = 0;
+        VideoResolutionBox.SelectedIndex = 0;
+        Connect.Invoke(sender, e);
+      }
+      catch
+      {
+
+      }
+    }
+
+
+    //end of webcam capabilities
+
+
+
   }
 }

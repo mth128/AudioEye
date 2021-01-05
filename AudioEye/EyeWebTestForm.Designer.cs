@@ -51,6 +51,7 @@
       this.CoordYLabel = new System.Windows.Forms.Label();
       this.toolStrip1 = new System.Windows.Forms.ToolStrip();
       this.LoadImageButton = new System.Windows.Forms.ToolStripButton();
+      this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
       this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
@@ -65,7 +66,14 @@
       this.AmplitudeRightBox = new System.Windows.Forms.TextBox();
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.groupBox2 = new System.Windows.Forms.GroupBox();
-      this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
+      this.VideoResolutionBox = new System.Windows.Forms.ComboBox();
+      this.label13 = new System.Windows.Forms.Label();
+      this.VideoDevicesBox = new System.Windows.Forms.ComboBox();
+      this.label14 = new System.Windows.Forms.Label();
+      this.bindingSourceVideoSources = new System.Windows.Forms.BindingSource(this.components);
+      this.bindingSourceResolutions = new System.Windows.Forms.BindingSource(this.components);
+      this.WebCamButton = new System.Windows.Forms.ToolStripButton();
+      this.CamImagePictureBox = new System.Windows.Forms.PictureBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -78,6 +86,9 @@
       this.toolStrip1.SuspendLayout();
       this.groupBox1.SuspendLayout();
       this.groupBox2.SuspendLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.CamImagePictureBox)).BeginInit();
       this.SuspendLayout();
       // 
       // splitContainer1
@@ -91,13 +102,14 @@
       // 
       // splitContainer1.Panel1
       // 
+      this.splitContainer1.Panel1.Controls.Add(this.CamImagePictureBox);
       this.splitContainer1.Panel1.Controls.Add(this.ImageBox);
       // 
       // splitContainer1.Panel2
       // 
       this.splitContainer1.Panel2.Controls.Add(this.tableLayoutPanel1);
-      this.splitContainer1.Size = new System.Drawing.Size(959, 450);
-      this.splitContainer1.SplitterDistance = 236;
+      this.splitContainer1.Size = new System.Drawing.Size(959, 470);
+      this.splitContainer1.SplitterDistance = 246;
       this.splitContainer1.TabIndex = 8;
       // 
       // ImageBox
@@ -105,9 +117,9 @@
       this.ImageBox.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-      this.ImageBox.Location = new System.Drawing.Point(3, 3);
+      this.ImageBox.Location = new System.Drawing.Point(332, 3);
       this.ImageBox.Name = "ImageBox";
-      this.ImageBox.Size = new System.Drawing.Size(953, 230);
+      this.ImageBox.Size = new System.Drawing.Size(624, 240);
       this.ImageBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.ImageBox.TabIndex = 0;
       this.ImageBox.TabStop = false;
@@ -136,7 +148,7 @@
       this.tableLayoutPanel1.RowCount = 2;
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 20F));
       this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-      this.tableLayoutPanel1.Size = new System.Drawing.Size(953, 208);
+      this.tableLayoutPanel1.Size = new System.Drawing.Size(953, 218);
       this.tableLayoutPanel1.TabIndex = 2;
       // 
       // label9
@@ -170,7 +182,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.MonoBox.Location = new System.Drawing.Point(320, 23);
       this.MonoBox.Name = "MonoBox";
-      this.MonoBox.Size = new System.Drawing.Size(311, 182);
+      this.MonoBox.Size = new System.Drawing.Size(311, 192);
       this.MonoBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.MonoBox.TabIndex = 1;
       this.MonoBox.TabStop = false;
@@ -182,7 +194,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.RightBox.Location = new System.Drawing.Point(637, 23);
       this.RightBox.Name = "RightBox";
-      this.RightBox.Size = new System.Drawing.Size(313, 182);
+      this.RightBox.Size = new System.Drawing.Size(313, 192);
       this.RightBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.RightBox.TabIndex = 3;
       this.RightBox.TabStop = false;
@@ -194,7 +206,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
       this.LeftBox.Location = new System.Drawing.Point(3, 23);
       this.LeftBox.Name = "LeftBox";
-      this.LeftBox.Size = new System.Drawing.Size(311, 182);
+      this.LeftBox.Size = new System.Drawing.Size(311, 192);
       this.LeftBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
       this.LeftBox.TabIndex = 2;
       this.LeftBox.TabStop = false;
@@ -305,7 +317,8 @@
       // 
       this.toolStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.LoadImageButton,
-            this.toolStripButton1});
+            this.toolStripButton1,
+            this.WebCamButton});
       this.toolStrip1.Location = new System.Drawing.Point(0, 0);
       this.toolStrip1.Name = "toolStrip1";
       this.toolStrip1.Size = new System.Drawing.Size(986, 25);
@@ -321,6 +334,16 @@
       this.LoadImageButton.Size = new System.Drawing.Size(23, 22);
       this.LoadImageButton.Text = "Load Image";
       this.LoadImageButton.Click += new System.EventHandler(this.LoadImageButton_Click);
+      // 
+      // toolStripButton1
+      // 
+      this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
+      this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.toolStripButton1.Name = "toolStripButton1";
+      this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
+      this.toolStripButton1.Text = "VideoTest";
+      this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
       // 
       // UpdateTimer
       // 
@@ -456,28 +479,76 @@
       this.groupBox2.Controls.Add(this.AmplitudeRightBox);
       this.groupBox2.Controls.Add(this.label11);
       this.groupBox2.Controls.Add(this.AmplitudeMonoBox);
-      this.groupBox2.Location = new System.Drawing.Point(560, 28);
+      this.groupBox2.Location = new System.Drawing.Point(560, 24);
       this.groupBox2.Name = "groupBox2";
       this.groupBox2.Size = new System.Drawing.Size(320, 46);
       this.groupBox2.TabIndex = 42;
       this.groupBox2.TabStop = false;
       this.groupBox2.Text = "Sound Amplitude Settings";
       // 
-      // toolStripButton1
+      // VideoResolutionBox
       // 
-      this.toolStripButton1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.toolStripButton1.Image = ((System.Drawing.Image)(resources.GetObject("toolStripButton1.Image")));
-      this.toolStripButton1.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.toolStripButton1.Name = "toolStripButton1";
-      this.toolStripButton1.Size = new System.Drawing.Size(23, 22);
-      this.toolStripButton1.Text = "VideoTest";
-      this.toolStripButton1.Click += new System.EventHandler(this.toolStripButton1_Click);
+      this.VideoResolutionBox.DataSource = this.bindingSourceResolutions;
+      this.VideoResolutionBox.FormattingEnabled = true;
+      this.VideoResolutionBox.Location = new System.Drawing.Point(835, 70);
+      this.VideoResolutionBox.Name = "VideoResolutionBox";
+      this.VideoResolutionBox.Size = new System.Drawing.Size(121, 21);
+      this.VideoResolutionBox.TabIndex = 46;
+      // 
+      // label13
+      // 
+      this.label13.AutoSize = true;
+      this.label13.Location = new System.Drawing.Point(769, 73);
+      this.label13.Name = "label13";
+      this.label13.Size = new System.Drawing.Size(60, 13);
+      this.label13.TabIndex = 45;
+      this.label13.Text = "Resolution:";
+      // 
+      // VideoDevicesBox
+      // 
+      this.VideoDevicesBox.DataSource = this.bindingSourceVideoSources;
+      this.VideoDevicesBox.FormattingEnabled = true;
+      this.VideoDevicesBox.Location = new System.Drawing.Point(642, 70);
+      this.VideoDevicesBox.Name = "VideoDevicesBox";
+      this.VideoDevicesBox.Size = new System.Drawing.Size(121, 21);
+      this.VideoDevicesBox.TabIndex = 44;
+      // 
+      // label14
+      // 
+      this.label14.AutoSize = true;
+      this.label14.Location = new System.Drawing.Point(557, 73);
+      this.label14.Name = "label14";
+      this.label14.Size = new System.Drawing.Size(79, 13);
+      this.label14.TabIndex = 43;
+      this.label14.Text = "Video Devices:";
+      // 
+      // WebCamButton
+      // 
+      this.WebCamButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.WebCamButton.Image = ((System.Drawing.Image)(resources.GetObject("WebCamButton.Image")));
+      this.WebCamButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.WebCamButton.Name = "WebCamButton";
+      this.WebCamButton.Size = new System.Drawing.Size(23, 22);
+      this.WebCamButton.Text = "WebCam";
+      this.WebCamButton.Click += new System.EventHandler(this.ConnectButton_Click);
+      // 
+      // CamImagePictureBox
+      // 
+      this.CamImagePictureBox.Location = new System.Drawing.Point(9, 3);
+      this.CamImagePictureBox.Name = "CamImagePictureBox";
+      this.CamImagePictureBox.Size = new System.Drawing.Size(320, 240);
+      this.CamImagePictureBox.TabIndex = 1;
+      this.CamImagePictureBox.TabStop = false;
       // 
       // EyeWebTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-      this.ClientSize = new System.Drawing.Size(986, 555);
+      this.ClientSize = new System.Drawing.Size(986, 575);
+      this.Controls.Add(this.VideoResolutionBox);
+      this.Controls.Add(this.label13);
+      this.Controls.Add(this.VideoDevicesBox);
+      this.Controls.Add(this.label14);
       this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.OriginalBox);
@@ -507,6 +578,9 @@
       this.groupBox1.PerformLayout();
       this.groupBox2.ResumeLayout(false);
       this.groupBox2.PerformLayout();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.CamImagePictureBox)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -549,6 +623,14 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.GroupBox groupBox2;
     private System.Windows.Forms.ToolStripButton toolStripButton1;
+    private System.Windows.Forms.ComboBox VideoResolutionBox;
+    private System.Windows.Forms.Label label13;
+    private System.Windows.Forms.ComboBox VideoDevicesBox;
+    private System.Windows.Forms.Label label14;
+    private System.Windows.Forms.BindingSource bindingSourceResolutions;
+    private System.Windows.Forms.BindingSource bindingSourceVideoSources;
+    private System.Windows.Forms.ToolStripButton WebCamButton;
+    private System.Windows.Forms.PictureBox CamImagePictureBox;
   }
 }
 

@@ -33,16 +33,16 @@ namespace AudioEye
       this.CamImagePictureBox = new System.Windows.Forms.PictureBox();
       this.label1 = new System.Windows.Forms.Label();
       this.VideoDevicesBox = new System.Windows.Forms.ComboBox();
-      this.VideoResolutionBox = new System.Windows.Forms.ComboBox();
-      this.label2 = new System.Windows.Forms.Label();
-      this.bindingSourceResolutions = new System.Windows.Forms.BindingSource(this.components);
       this.bindingSourceVideoSources = new System.Windows.Forms.BindingSource(this.components);
+      this.VideoResolutionBox = new System.Windows.Forms.ComboBox();
+      this.bindingSourceResolutions = new System.Windows.Forms.BindingSource(this.components);
+      this.label2 = new System.Windows.Forms.Label();
       this.button1 = new System.Windows.Forms.Button();
       this.pictureBox1 = new System.Windows.Forms.PictureBox();
       this.ConnectButton = new System.Windows.Forms.Button();
       ((System.ComponentModel.ISupportInitialize)(this.CamImagePictureBox)).BeginInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).BeginInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
       this.SuspendLayout();
       // 
@@ -71,6 +71,7 @@ namespace AudioEye
       this.VideoDevicesBox.Name = "VideoDevicesBox";
       this.VideoDevicesBox.Size = new System.Drawing.Size(121, 21);
       this.VideoDevicesBox.TabIndex = 2;
+      this.VideoDevicesBox.TextChanged += new System.EventHandler(this.VideoDevicesBox_TextChanged);
       // 
       // VideoResolutionBox
       // 
@@ -135,8 +136,8 @@ namespace AudioEye
       this.Name = "VideoForm";
       this.Text = "VideoForm";
       ((System.ComponentModel.ISupportInitialize)(this.CamImagePictureBox)).EndInit();
-      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.bindingSourceVideoSources)).EndInit();
+      ((System.ComponentModel.ISupportInitialize)(this.bindingSourceResolutions)).EndInit();
       ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
       this.ResumeLayout(false);
       this.PerformLayout();
