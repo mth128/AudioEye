@@ -10,6 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using WebcamCapturer.Core;
 
 namespace AudioEye
 {
@@ -330,5 +331,18 @@ namespace AudioEye
       }
     }
 
+    private void toolStripButton1_Click(object sender, EventArgs e)
+    {
+      try
+      {
+        VideoForm videoForm = new VideoForm();
+        var presenter = new WebcamCapturePresenter(videoForm);
+        videoForm.ShowDialog();
+      }
+      catch (Exception ex)
+      {
+        MessageBox.Show(ex.Message, "Error");
+      }
+    }
   }
 }
