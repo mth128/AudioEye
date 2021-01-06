@@ -357,13 +357,130 @@ namespace AudioEye
       }
     }
 
-    private Image previousPreprocessImage = null; 
-    private Image PreProcess(Image image)
+    private Image previousMovementImage = null;
+    private Image currentMovementImage = null; 
+
+    private Image DetectMovement(Image image)
     {
-      Image newImage = SetContrast(image);
+      if (image == currentMovementImage)
+        return Difference((Bitmap)previousMovementImage, (Bitmap)currentMovementImage);
 
-      return newImage;
+      if (previousMovementImage !=null)
+        previousMovementImage.Dispose();
+      
+      previousMovementImage = currentMovementImage; 
+      currentMovementImage = image;
 
+      return Difference((Bitmap) previousMovementImage, (Bitmap)currentMovementImage);
+
+    }
+
+    Image previousImage = null;
+    Image previousResult = null; 
+    private Image PreProcess(Image image, bool contrastOnly = false, bool mix = false)
+    {
+      if (image == previousImage)
+        return previousResult;
+
+      previousImage = image; 
+      
+      Image contrastImage = SetContrast(image);
+      if (contrastOnly)
+      {
+        previousResult = contrastImage;
+      }
+      else
+      {
+        Image movementImage = DetectMovement(contrastImage);
+        if (mix)
+        {
+          previousResult = Mix((Bitmap)movementImage, (Bitmap)contrastImage, 1.5f, 0.2f);
+          movementImage.Dispose();
+        }
+        else
+          previousResult = movementImage;
+      }
+      return previousResult; 
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="a"></param>
+    /// <param name="b"></param>
+    /// <param name="aContribution">aContribution value must be between 0 and 1</param>
+    /// <returns></returns>
+    private Image Mix(Bitmap a, Bitmap b, float aContribution, float bContribution)
+    {
+      if (a == null)
+        return b;
+      if (b == null)
+        return a;
+
+      Bitmap newBitmap = (Bitmap)a.Clone();
+      BitmapData dataNew = newBitmap.LockBits(
+          new Rectangle(0, 0, newBitmap.Width, newBitmap.Height),
+          ImageLockMode.ReadWrite,
+          newBitmap.PixelFormat);
+      BitmapData dataA = a.LockBits(
+          new Rectangle(0, 0, a.Width, a.Height),
+          ImageLockMode.ReadWrite,
+          newBitmap.PixelFormat);
+
+      BitmapData dataB = b.LockBits(
+        new Rectangle(0, 0, a.Width, a.Height),
+        ImageLockMode.ReadWrite,
+        newBitmap.PixelFormat);
+
+      int Height = newBitmap.Height;
+      int Width = newBitmap.Width;
+      int stride = dataNew.Stride;
+      int offset = 4;
+      if (newBitmap.PixelFormat == PixelFormat.Format24bppRgb)
+        offset = 3;
+      unsafe
+      {
+        for (int y = 0; y < Height; ++y)
+        {
+          byte* rowNew = (byte*)dataNew.Scan0 + (y * stride);
+          byte* rowA = (byte*)dataA.Scan0 + (y * stride);
+          byte* rowB = (byte*)dataB.Scan0 + (y * stride);
+          int columnOffset = 0;
+          for (int x = 0; x < Width; ++x)
+          {
+            byte Ba = rowA[columnOffset];
+            byte Ga = rowA[columnOffset + 1];
+            byte Ra = rowA[columnOffset + 2];
+            byte Bb = rowB[columnOffset];
+            byte Gb = rowB[columnOffset + 1];
+            byte Rb = rowB[columnOffset + 2];
+
+            float Red = (Ra * aContribution + Rb*bContribution) ;
+            float Green = (Ga * aContribution + Gb * bContribution);
+            float Blue = (Ba * aContribution + Bb * bContribution);
+
+            int iR = (int)Red;
+            iR = iR > 255 ? 255 : iR;
+            iR = iR < 0 ? 0 : iR;
+            int iG = (int)Green;
+            iG = iG > 255 ? 255 : iG;
+            iG = iG < 0 ? 0 : iG;
+            int iB = (int)Blue;
+            iB = iB > 255 ? 255 : iB;
+            iB = iB < 0 ? 0 : iB;
+
+            rowNew[columnOffset] = (byte)iB;
+            rowNew[columnOffset + 1] = (byte)iG;
+            rowNew[columnOffset + 2] = (byte)iR;
+             
+            columnOffset += offset;
+          }
+        }
+      }
+      newBitmap.UnlockBits(dataNew);
+      a.UnlockBits(dataA);
+      b.UnlockBits(dataB);
+      return newBitmap;
     }
 
     /// <summary>
@@ -426,6 +543,60 @@ namespace AudioEye
         }
       }
       newBitmap.UnlockBits(data);
+      return newBitmap;
+    }
+
+    private Bitmap Difference(Bitmap a, Bitmap b)
+    {
+      if (a == null)
+        return b;
+      if (b == null)
+        return a; 
+
+      Bitmap newBitmap = (Bitmap)a.Clone();
+      BitmapData dataNew = newBitmap.LockBits(
+          new Rectangle(0, 0, newBitmap.Width, newBitmap.Height),
+          ImageLockMode.ReadWrite,
+          newBitmap.PixelFormat);
+      BitmapData dataA = a.LockBits(
+          new Rectangle(0, 0, a.Width, a.Height),
+          ImageLockMode.ReadWrite,
+          newBitmap.PixelFormat);
+
+      BitmapData dataB = b.LockBits(
+        new Rectangle(0, 0, a.Width, a.Height),
+        ImageLockMode.ReadWrite,
+        newBitmap.PixelFormat);
+
+      int Height = newBitmap.Height;
+      int Width = newBitmap.Width;
+      int stride = dataNew.Stride;
+      int offset = 4;
+      if (newBitmap.PixelFormat == PixelFormat.Format24bppRgb)
+        offset = 3;
+      unsafe
+      {
+        for (int y = 0; y < Height; ++y)
+        {
+          byte* rowNew = (byte*)dataNew.Scan0 + (y * stride);
+          byte* rowA = (byte*)dataA.Scan0 + (y * stride);
+          byte* rowB = (byte*)dataB.Scan0 + (y * stride);
+          int columnOffset = 0;
+          for (int x = 0; x < Width; ++x)
+          {
+            for (int i =0; i<3;i++)
+              if (rowA[columnOffset+i] > rowB[columnOffset + i])
+                rowNew[columnOffset + i] = (byte) (rowA[columnOffset + i] - rowB[columnOffset + i]);
+              else 
+                rowNew[columnOffset + i] = (byte) (rowB[columnOffset + i] - rowA[columnOffset + i]);
+
+            columnOffset += offset;
+          }
+        }
+      }
+      newBitmap.UnlockBits(dataNew);
+      a.UnlockBits(dataA);
+      b.UnlockBits(dataB);
       return newBitmap;
     }
 
