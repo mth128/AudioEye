@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -20,8 +21,8 @@ namespace AudioEye
     private int resolution = 512;
 
     private int subsectionsPerTone = 4;
-    private float powerBase = 1.5f;
-    private float centerSubstract = 0.4f;
+    private float powerBase = 1.3f;
+    private float centerSubstract = 0.7f;
 
     //private EyeWeb eyeWeb;
 
@@ -29,16 +30,17 @@ namespace AudioEye
 
     //private byte[] imageIntensityBytes; 
 
-    private Image snapShotImage = new Bitmap(640,480); 
-
+    private Image snapShotImage = new Bitmap(640,480);
+    private bool moveWithCursor = false;
+    private bool connected = false; 
     public EyeWebTestForm()
     {
       InitializeComponent();
       UpdateEyeWeb();
-      if (!LoadImage())
-      {
+      //if (!LoadImage())
+      //{
         SetImage(new Bitmap(640, 480));
-      }
+      //}
 
       //webcam stuff. 
       VideoDevicesBox.SelectedIndexChanged += OnDevicesComboBoxSelectedIndexChanged;
@@ -112,6 +114,13 @@ namespace AudioEye
 
     }*/
 
+    private void MoveWithCursorBox_CheckedChanged(object sender, EventArgs e)
+    {
+      moveWithCursor = MoveWithCursorBox.Checked;
+      if (!moveWithCursor)
+        CenterPoint();
+    }
+
 
     private void PictureBox1_MouseEnter(object sender, EventArgs e)
     {
@@ -174,17 +183,23 @@ namespace AudioEye
     {
       try
       {
-        CoordXLabel.Text = e.X.ToString();
-        CoordYLabel.Text = e.Y.ToString();
+        if (moveWithCursor)
+        {
+          CoordXLabel.Text = e.X.ToString();
+          CoordYLabel.Text = e.Y.ToString();
 
-        Point point = Image1Point();
+          Point point = Image1Point();
 
-        ImageCoordXLabel.Text = point.X.ToString();
-        ImageCoordYLabel.Text = point.Y.ToString();
+          ImageCoordXLabel.Text = point.X.ToString();
+          ImageCoordYLabel.Text = point.Y.ToString();
 
-        ThreadControlCenter.Main.LeftPoint = point;
-        ThreadControlCenter.Main.RightPoint = point; 
-
+          ThreadControlCenter.Main.LeftPoint = point;
+          ThreadControlCenter.Main.RightPoint = point;
+        }
+        else
+        {
+          CenterPoint(); 
+        }
       }
       catch
       {
@@ -194,42 +209,62 @@ namespace AudioEye
 
     }
 
+    private void CenterPoint()
+    {
+      if (moveWithCursor)
+        return; 
+      Point point = ScalePoint(new Point(ImageBox.Width / 2, ImageBox.Height / 2));
+
+      ThreadControlCenter.Main.LeftPoint = point;
+      ThreadControlCenter.Main.RightPoint = point;
+    }
+
     public Point Image1Point()
     {
       Point p = ImageBox.PointToClient(Cursor.Position);
-      Point unscaled_p = new Point();
+      return ScalePoint(p); 
+    }
 
-      // image and container dimensions
-      int w_i = ImageBox.Image.Width;
-      int h_i = ImageBox.Image.Height;
-      int w_c = ImageBox.Width;
-      int h_c = ImageBox.Height;
-
-      float imageRatio = w_i / (float)h_i; // image W:H ratio
-      float containerRatio = w_c / (float)h_c; // container W:H ratio
-
-      if (imageRatio >= containerRatio)
+    private Point ScalePoint(Point p)
+    {
+      try
       {
-        // horizontal image
-        float scaleFactor = w_c / (float)w_i;
-        float scaledHeight = h_i * scaleFactor;
-        // calculate gap between top of container and top of image
-        float filler = Math.Abs(h_c - scaledHeight) / 2;
-        unscaled_p.X = (int)(p.X / scaleFactor);
-        unscaled_p.Y = (int)((p.Y - filler) / scaleFactor);
+        Point unscaled_p = new Point();
+        // image and container dimensions
+        int w_i = ImageBox.Image.Width;
+        int h_i = ImageBox.Image.Height;
+        int w_c = ImageBox.Width;
+        int h_c = ImageBox.Height;
+
+        float imageRatio = w_i / (float)h_i; // image W:H ratio
+        float containerRatio = w_c / (float)h_c; // container W:H ratio
+
+        if (imageRatio >= containerRatio)
+        {
+          // horizontal image
+          float scaleFactor = w_c / (float)w_i;
+          float scaledHeight = h_i * scaleFactor;
+          // calculate gap between top of container and top of image
+          float filler = Math.Abs(h_c - scaledHeight) / 2;
+          unscaled_p.X = (int)(p.X / scaleFactor);
+          unscaled_p.Y = (int)((p.Y - filler) / scaleFactor);
+        }
+        else
+        {
+          // vertical image
+          float scaleFactor = h_c / (float)h_i;
+          float scaledWidth = w_i * scaleFactor;
+          float filler = Math.Abs(w_c - scaledWidth) / 2;
+          unscaled_p.X = (int)((p.X - filler) / scaleFactor);
+          unscaled_p.Y = (int)(p.Y / scaleFactor);
+        }
+
+        return unscaled_p;
       }
-      else
+      catch
       {
-        // vertical image
-        float scaleFactor = h_c / (float)h_i;
-        float scaledWidth = w_i * scaleFactor;
-        float filler = Math.Abs(w_c - scaledWidth) / 2;
-        unscaled_p.X = (int)((p.X - filler) / scaleFactor);
-        unscaled_p.Y = (int)(p.Y / scaleFactor);
+        return new Point(0, 0); 
       }
-
-      return unscaled_p;
-
     }
 
     private void PictureBox1_Click(object sender, EventArgs e)
@@ -282,6 +317,7 @@ namespace AudioEye
       ThreadControlCenter.Main.OriginalImage = newImage;
       ThreadControlCenter.Main.ActiveStereoImage = stereoImage;
       dispose.DisposeDelayed();
+      CenterPoint(); 
     }
 
     private bool LoadImage()
@@ -302,16 +338,95 @@ namespace AudioEye
 
     private void UpdateTimer_Tick(object sender, EventArgs e)
     {
-      if (CamImagePictureBox.Image != null)
+      try
       {
-        Image newImage = (Image)CamImagePictureBox.Image.Clone();
-        SetImage(newImage);
-      }
+        if (connected && CamImagePictureBox.Image!=null)
+        {
+          Image modifiedImage = PreProcess(CamImagePictureBox.Image);
+          SetImage(modifiedImage);
+        }
 
-      ImageBox.Image = ThreadControlCenter.Main.EditedOriginal;
-      LeftBox.Image = ThreadControlCenter.Main.OutputBitmapLeft;
-      RightBox.Image = ThreadControlCenter.Main.OutputBitmapRight;
-      MonoBox.Image = ThreadControlCenter.Main.OutputBitmapMono;
+        ImageBox.Image = ThreadControlCenter.Main.EditedOriginal;
+        LeftBox.Image = ThreadControlCenter.Main.OutputBitmapLeft;
+        RightBox.Image = ThreadControlCenter.Main.OutputBitmapRight;
+        MonoBox.Image = ThreadControlCenter.Main.OutputBitmapMono;
+      }
+      catch
+      {
+
+      }
+    }
+
+    private Image previousPreprocessImage = null; 
+    private Image PreProcess(Image image)
+    {
+      Image newImage = SetContrast(image);
+
+      return newImage;
+
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="image"></param>
+    /// <param name="contrast">value should be between -100 and 100</param>
+    /// <returns></returns>
+    private Image SetContrast(Image image ,float contrast = 100)
+    {
+      //https://stackoverflow.com/questions/3115076/adjust-the-contrast-of-an-image-in-c-sharp-efficiently
+      contrast = (100.0f + contrast) / 100.0f;
+      contrast *= contrast;
+      Bitmap newBitmap = (Bitmap)image.Clone();
+      BitmapData data = newBitmap.LockBits(
+          new Rectangle(0, 0, newBitmap.Width, newBitmap.Height),
+          ImageLockMode.ReadWrite,
+          newBitmap.PixelFormat);
+      int Height = newBitmap.Height;
+      int Width = newBitmap.Width;
+      int stride = data.Stride;
+      int offset = 4; 
+      if (newBitmap.PixelFormat == PixelFormat.Format24bppRgb)
+        offset = 3; 
+      unsafe
+      {
+        for (int y = 0; y < Height; ++y)
+        {
+          byte* row = (byte*)data.Scan0 + (y * stride);
+          int columnOffset = 0;
+          for (int x = 0; x < Width; ++x)
+          {
+            byte B = row[columnOffset];
+            byte G = row[columnOffset + 1];
+            byte R = row[columnOffset + 2];
+
+            float Red = R / 255.0f;
+            float Green = G / 255.0f;
+            float Blue = B / 255.0f;
+            Red = (((Red - 0.5f) * contrast) + 0.5f) * 255.0f;
+            Green = (((Green - 0.5f) * contrast) + 0.5f) * 255.0f;
+            Blue = (((Blue - 0.5f) * contrast) + 0.5f) * 255.0f;
+
+            int iR = (int)Red;
+            iR = iR > 255 ? 255 : iR;
+            iR = iR < 0 ? 0 : iR;
+            int iG = (int)Green;
+            iG = iG > 255 ? 255 : iG;
+            iG = iG < 0 ? 0 : iG;
+            int iB = (int)Blue;
+            iB = iB > 255 ? 255 : iB;
+            iB = iB < 0 ? 0 : iB;
+
+            row[columnOffset] = (byte)iB;
+            row[columnOffset + 1] = (byte)iG;
+            row[columnOffset + 2] = (byte)iR;
+
+            columnOffset += offset;
+          }
+        }
+      }
+      newBitmap.UnlockBits(data);
+      return newBitmap;
     }
 
     private void OriginalBox_CheckedChanged(object sender, EventArgs e)
@@ -370,6 +485,12 @@ namespace AudioEye
       }
     }
 
+    private void EyeWebTestForm_FormClosing(object sender, FormClosingEventArgs e)
+    {
+      if (connected)
+        Disconnect.Invoke(sender, e);
+      Application.Exit();
+    }
 
     //webcam capabilities
     //https://github.com/rgomez90/WebcamCapturer.Controls/blob/master/WebcamCapturer.Controls.WinForms/WebcamCaptureForm.cs
@@ -441,6 +562,7 @@ namespace AudioEye
     {
       VideoDevicesBox.Enabled = enable;
       VideoResolutionBox.Enabled = enable;
+      connected = enable; 
     }
 
     string IWebcamCaptureView.GetExportPath()
@@ -467,21 +589,31 @@ namespace AudioEye
 
     private void ConnectButton_Click(object sender, EventArgs e)
     {
-      try
+      if (!connected)
       {
-        if (VideoDevicesBox.SelectedIndex < 0)
-          VideoDevicesBox.SelectedIndex = 0;
-        if (VideoResolutionBox.Text == null || VideoResolutionBox.Text == "")
+        try
         {
-          DeviceSelected?.Invoke(this, (string)VideoDevicesBox.SelectedItem);
-          VideoResolutionBox.SelectedItem = "640 x 480";
+          if (VideoDevicesBox.SelectedIndex < 0)
+            VideoDevicesBox.SelectedIndex = 0;
+          if (VideoResolutionBox.Text == null || VideoResolutionBox.Text == "")
+          {
+            DeviceSelected?.Invoke(this, (string)VideoDevicesBox.SelectedItem);
+            VideoResolutionBox.SelectedItem = "640 x 480";
+          }
         }
-      }
-      catch
-      {
+        catch
+        {
 
+        }
+        Connect.Invoke(sender, e);
+        CenterPoint();
+        connected = true; 
       }
-      Connect.Invoke(sender, e);
+      else
+      {
+        Disconnect.Invoke(sender, e);
+        connected = false; 
+      }
     }
 
 
@@ -514,8 +646,9 @@ namespace AudioEye
     }
 
 
-    //end of webcam capabilities
 
+
+    //end of webcam capabilities
 
 
   }

@@ -54,6 +54,7 @@
       this.LoadImageButton = new System.Windows.Forms.ToolStripButton();
       this.toolStripButton1 = new System.Windows.Forms.ToolStripButton();
       this.WebCamButton = new System.Windows.Forms.ToolStripButton();
+      this.TestSnapShotButton = new System.Windows.Forms.ToolStripButton();
       this.UpdateTimer = new System.Windows.Forms.Timer(this.components);
       this.label1 = new System.Windows.Forms.Label();
       this.label2 = new System.Windows.Forms.Label();
@@ -74,7 +75,7 @@
       this.VideoDevicesBox = new System.Windows.Forms.ComboBox();
       this.bindingSourceVideoSources = new System.Windows.Forms.BindingSource(this.components);
       this.label14 = new System.Windows.Forms.Label();
-      this.TestSnapShotButton = new System.Windows.Forms.ToolStripButton();
+      this.MoveWithCursorBox = new System.Windows.Forms.CheckBox();
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
       this.splitContainer1.Panel1.SuspendLayout();
       this.splitContainer1.Panel2.SuspendLayout();
@@ -118,6 +119,7 @@
       this.CamImagePictureBox.Location = new System.Drawing.Point(9, 3);
       this.CamImagePictureBox.Name = "CamImagePictureBox";
       this.CamImagePictureBox.Size = new System.Drawing.Size(320, 240);
+      this.CamImagePictureBox.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
       this.CamImagePictureBox.TabIndex = 1;
       this.CamImagePictureBox.TabStop = false;
       // 
@@ -256,7 +258,7 @@
       this.PowerBaseBox.Name = "PowerBaseBox";
       this.PowerBaseBox.Size = new System.Drawing.Size(52, 20);
       this.PowerBaseBox.TabIndex = 13;
-      this.PowerBaseBox.Text = "1.5";
+      this.PowerBaseBox.Text = "1.3";
       this.PowerBaseBox.TextChanged += new System.EventHandler(this.PowerBaseBox_TextChanged);
       // 
       // label5
@@ -274,7 +276,7 @@
       this.CenterSubstractBox.Name = "CenterSubstractBox";
       this.CenterSubstractBox.Size = new System.Drawing.Size(52, 20);
       this.CenterSubstractBox.TabIndex = 15;
-      this.CenterSubstractBox.Text = "0.4";
+      this.CenterSubstractBox.Text = "0.7";
       this.CenterSubstractBox.TextChanged += new System.EventHandler(this.CenterSubstractBox_TextChanged);
       // 
       // label6
@@ -364,6 +366,16 @@
       this.WebCamButton.Size = new System.Drawing.Size(23, 22);
       this.WebCamButton.Text = "WebCam";
       this.WebCamButton.Click += new System.EventHandler(this.ConnectButton_Click);
+      // 
+      // TestSnapShotButton
+      // 
+      this.TestSnapShotButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
+      this.TestSnapShotButton.Image = ((System.Drawing.Image)(resources.GetObject("TestSnapShotButton.Image")));
+      this.TestSnapShotButton.ImageTransparentColor = System.Drawing.Color.Magenta;
+      this.TestSnapShotButton.Name = "TestSnapShotButton";
+      this.TestSnapShotButton.Size = new System.Drawing.Size(23, 22);
+      this.TestSnapShotButton.Text = "SnapShot";
+      this.TestSnapShotButton.Click += new System.EventHandler(this.TestSnapShotButton_Click);
       // 
       // UpdateTimer
       // 
@@ -542,21 +554,23 @@
       this.label14.TabIndex = 43;
       this.label14.Text = "Video Devices:";
       // 
-      // TestSnapShotButton
+      // MoveWithCursorBox
       // 
-      this.TestSnapShotButton.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Image;
-      this.TestSnapShotButton.Image = ((System.Drawing.Image)(resources.GetObject("TestSnapShotButton.Image")));
-      this.TestSnapShotButton.ImageTransparentColor = System.Drawing.Color.Magenta;
-      this.TestSnapShotButton.Name = "TestSnapShotButton";
-      this.TestSnapShotButton.Size = new System.Drawing.Size(23, 22);
-      this.TestSnapShotButton.Text = "SnapShot";
-      this.TestSnapShotButton.Click += new System.EventHandler(this.TestSnapShotButton_Click);
+      this.MoveWithCursorBox.AutoSize = true;
+      this.MoveWithCursorBox.Location = new System.Drawing.Point(94, 60);
+      this.MoveWithCursorBox.Name = "MoveWithCursorBox";
+      this.MoveWithCursorBox.Size = new System.Drawing.Size(111, 17);
+      this.MoveWithCursorBox.TabIndex = 47;
+      this.MoveWithCursorBox.Text = "Move With Cursor";
+      this.MoveWithCursorBox.UseVisualStyleBackColor = true;
+      this.MoveWithCursorBox.CheckedChanged += new System.EventHandler(this.MoveWithCursorBox_CheckedChanged);
       // 
       // EyeWebTestForm
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.ClientSize = new System.Drawing.Size(986, 575);
+      this.Controls.Add(this.MoveWithCursorBox);
       this.Controls.Add(this.VideoResolutionBox);
       this.Controls.Add(this.label13);
       this.Controls.Add(this.VideoDevicesBox);
@@ -574,6 +588,7 @@
       this.Controls.Add(this.splitContainer1);
       this.Name = "EyeWebTestForm";
       this.Text = "Audio Eye";
+      this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.EyeWebTestForm_FormClosing);
       this.splitContainer1.Panel1.ResumeLayout(false);
       this.splitContainer1.Panel2.ResumeLayout(false);
       ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).EndInit();
@@ -644,6 +659,7 @@
     private System.Windows.Forms.ToolStripButton WebCamButton;
     private System.Windows.Forms.PictureBox CamImagePictureBox;
     private System.Windows.Forms.ToolStripButton TestSnapShotButton;
+    private System.Windows.Forms.CheckBox MoveWithCursorBox;
   }
 }
 
